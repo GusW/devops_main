@@ -1,0 +1,50 @@
+# Single template for learning purposes
+
+version: "2"
+services:
+    redis:
+	    image: redis
+	    networks:
+			- back-end
+
+    db:
+	    image: postgres:9.4
+	    networks:
+			- back-end
+		environment:
+			- POSTGRES_PASSWORD=mysecretpassword
+
+    vote:
+	    image: voting-app
+	    # or build: ./vote
+	    ports:
+		    - 5000:80
+	    links:
+		    - redis
+		networks:
+			- front-end
+			- back-end
+
+    result:
+	    image: result-app
+	    # or build: ./result
+	    ports:
+		    - 5001:80
+	    links:
+		    - db
+		networks:
+			- front-end
+			- back-end
+
+    worker:
+	    image: worker
+	    # or build: ./worker
+	    links:
+		    - redis
+		    - db
+		networks:
+			- back-end
+
+networks:
+	front-end:
+	back-end:

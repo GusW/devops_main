@@ -1,0 +1,55 @@
+/var/lib/docker
+
+docker version
+docker pull <imageName>
+docker ps -a
+docker images
+
+docker exec <imageName or ID> <command> 										# running container
+docker stop <containerName or ID>
+docker rm <containerName or ID>
+docker rmi <imageName:tag>
+
+docker run --name <containerName> <imageName:tag> <params>
+docker -d run --name <containerName> <imageName:tag> <params> <appendCommands>  # dettached
+docker attach <containerName or ID>                                             # reattach
+docker run -i <imageName:tag>                                                   # interactive mode
+docker run -it <imageName:tag>                                                  # interactive mode with terminal
+docker run -p <portHost:portContainer> <imageName:tag>                          # routing requests
+docker run -e <envVariable:envValue> <containerName or ID>                      # passing in env values
+
+docker run --link <linkImage:containerImage>
+
+docker inspect <containerName or ID>
+docker logs <containerName or ID>
+
+docker build <pathWithDockerfile> -t <imageName>
+docker history <imageName>
+
+docker login <accountName>
+docker push <imageName> 						    	    					# yourDockerAccount/yourContainerName
+
+docker-compose up																# docker-compose is the YAML fileName
+
+docker -H=remote-docker-engine:5000 run <imageName:tag>
+docker run --cpus=.5 <imageName:tag>                                            # container will use a top of 50% of host cpu
+docker run --memory=100m <imageName:tag>                                        # container wull use a top of 100MB of host RAM
+
+docker volume create <volumeName>                                               # creates a volume in /var/lib/docker/volumes/
+docker run -v <pathHost:pathContainer> <imageName:tag>                          # volume I/O mapping
+docker run --mount type=bind,source=<path/outside/docker/volumes>,target=<path>
+
+docker run --network=<none/host>                                                # default is bridge
+docker network create --driver bridge --subnet 182.18.0.0/16 <networkName>
+docker network ls
+
+docker run -d -p <portHost:portContainer> --name <registryName> registry:2
+docker <imageName> tag <tagName> <localhost or IP>:<portHost>/<tagName>
+docker push <localhost or IP>:<portHost>/<tagName
+docker pull <localhost or IP>:<portHost>/<tagName
+
+docker service create --replicas=<numberWorkers> <imageName>
+docker swarm init                                                               # on swarm manager
+docker swarm join --token <token>                                               # on swarm workers
+
+
