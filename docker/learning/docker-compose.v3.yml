@@ -1,0 +1,20 @@
+version: '3'
+
+services:
+  api:
+    # image does not exist yet but will get name:tag as below 
+    image: linkextractor-api:step4-python
+    # Dockerfile is at ./api on the pwd
+    # using docker-compose up -d --build will automatically build image before creating the containers
+    build: ./api
+    ports:
+      - "5000:5000"
+  web:
+    image: php:7-apache
+    ports:
+      - "80:80"
+    environment:
+      - API_ENDPOINT=http://api:5000/api/
+    volumes:
+      # bind mount local ./www folder on container /var/www/html
+      - ./www:/var/www/html
