@@ -1,0 +1,68 @@
+######## Minikube
+minilube config set vm-driver kvm2
+minikube start
+minikube start --vm-driver=kvm2
+minikube dashboard
+minikube service <serviceName>				# exposed below in kubectl 
+minikube stop
+minikube delete
+
+###### Kubernetes
+kubectl version
+kubectl cluster-info
+kubectl config current-context
+kubectl get <all|nodes|pods|rc|rs> <resourceName> 	# nodes, pods, replication controllers, replication sets (for deployments)
+kubectl get pods --all-namespaces
+kubectl get pods --watch				# watch for changes
+kubectl describe <pods|rc|rs>
+kubectl describe pods | grep app
+kubectl logs <podName>
+kubectl logs <podName> -c <containerName>
+kubectl logs -p <podName>				# previously running pod
+kubectl logs -f <podName>				# stream log
+
+kubectl run <podName> --image=<imageName>		# creates pods, rc and deployment
+kubectl create -f <fileName>				# pods or replication controllers
+kubectl create -f <fileName> --dryrun
+kubectl create -f <fileName> --save-config 		# adds annotations and keep track of those in the subsequent applies
+kubectl apply -f <fileName>				# Apply changes to the original create file
+kubectl edit -f <fileName>				# edit file in the console
+kubectl patch						# edit a small set of properties
+kubectl exec <podName> -it sh				# interactive terminal bash	
+kubectl delete pods <podName>
+
+kubectl get svc <serviceName>
+kubectl get ep <endpointName>
+kubectl port-forward pod/<podName> <extPort:intPort>
+kubectl port-forward deploy/<deployName> <extPort>
+kubectl port-forward svc/<serviceName> <extPort>
+kubectl expose rc <rcName> --name=<serviceName> --target-port=<portNumber> --type=NodePort
+kubectl describe svc <serviceName>
+kubectl describe ep
+kubectl delete svc <serviceName>
+
+kubectl get deploy --show-labels
+kubectl get deploy -l <label>=<labelName>	# get all deploys with a specific label
+kubectl describe deploy <deployName>
+kubectl apply -f <deployFile.yml> --record 	# deploying new version of the app/file keeps track of the revision history
+kubectl scale deploy <deployName> --replicas=<number>
+kubectl rollout status deployment <deployName>
+kubectl rollout history deployment <deployName>
+kubectl rollout undo deployment <deployName> --to-revision=<revisionNumber>
+kubectl delete deployment <deployName>
+
+kubectl get cm <configMapName> -o <yaml|json>				# output yaml|json
+kubectl create configmap <configMapName> --from-file=<path/to/file>	# from config file
+kubectl create configmap <configMapName> --from-env-file=<path/to/file>	# from an env file
+kubectl create configmap <configMapName> --from-literal=<key>=<value> 	# individual data values
+
+kubectl get secrets <secretName> -o <yaml|json>				
+kubectl create secret generic <secretName> --from-literal=<key>=<value>
+kubectl create secret generic <secretName> --from-file=<key>=<path/to/file>
+kubectl create secret tls <secretName> --cert=<path/to/file> --key=<path/to/file>
+
+# run K8s web ui dashboard
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0/aio/deploy/recommended.yaml # https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/
+kubectl describe secret -n kube-system # Type:  kubernetes.io/service-account-token
+kubectl proxy # http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/
+

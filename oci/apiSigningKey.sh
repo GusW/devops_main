@@ -38,7 +38,7 @@ sleep 180
 
 targetOCIcliName="oci-cli"
 
-echo "Enter path to /${targetOCIcliName} e.g: /home/username/code/python_main/venv3"
+echo "Enter path to /${targetOCIcliName} e.g: /home/gusw/code/python_main/venv3"
 read targetOCIcliPath
 
 virtualenv -p /usr/bin/python3.6 $targetOCIcliPath/$targetOCIcliName
@@ -55,14 +55,26 @@ read tenancyOCID
 
 echo "Your User OCID is ${userOCID}
 Your Tenancy OCID is ${tenancyOCID}
+Your
 "
-oci config setup
+oci setup config
 
 # oci session authenticate
 # oci session validate --config-file ~/.oci/config --profile <profile_name> --auth security_token
 # oci session refresh --profile <profile_name>
 
-#######################################################################################################################
+################################################## OKE LOCAL ACCESS ###################################################
 
-# alias sshoci01='ssh -i ~/.ssh/id_rsa opc@<changeThisIP>'
+
+################################################### PULL FROM OCIR ####################################################
+
+sudo docker login iad.ocir.io
+
+idmacyeswbbg/gustavo.watanabe@gmail.com
+# password...
+
+sudo docker pull iad.ocir.io/idmacyeswbbg/redpill-flask-user-api
+
+
+
 

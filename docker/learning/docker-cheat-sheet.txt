@@ -12,7 +12,7 @@ docker images -f reference="*some*regex*"                                       
 docker rmi <imageName:tag>
 
 docker start <containerName or ID>
-docker exec <containerName or ID> <command> 								    # running container
+docker exec <containerName or ID> <command> 					# running container
 docker stop <containerName or ID>
 docker rm <containerName or ID>
 
@@ -52,7 +52,7 @@ docker history <imageName>
 docker image tag <imageName> <tagName>                                          # yourDockerAccount/yourContainerName
 
 docker login <accountName>
-docker push <tagName> 						    	    					    # yourDockerAccount/yourContainerName
+docker push <tagName> 						    	    	# yourDockerAccount/yourContainerName
 
 #################### VOLUME & PERSISTENT DATA ####################
 
@@ -83,7 +83,7 @@ docker service create --name <serviceName>
                       --network <networkName>
                       -e <envTweaks>
                       <imageName>
-docker service ls                                                               # 
+docker service ls                                                               
 docker service ps <-serviceName>                                                # list tasks of given service
 docker service scale <serviceName>=<number>                                     # scale up number of replicas
 
@@ -96,8 +96,8 @@ docker swarm update --autolock=true                                             
 docker swarm unlock                                                             # unlocking swarm info after service restart
 docker node ls                                                                  # swarm node map
 docker swarm join-token <manager/worker>
-docker swarm join --token <mangerOrWorkerToken>                                               # on swarm workers or new managers
-docker swarm join-token --rotate <manager/worker>                              # renew token
+docker swarm join --token <mangerOrWorkerToken>                                 # on swarm workers or new managers
+docker swarm join-token --rotate <manager/worker>                               # renew token
 
 #################### SECRETS ####################
 
@@ -113,7 +113,7 @@ docker service create --secret <secretName>
 #################### STACK ####################
 #- depends on SWARM and anyStackFile.yml version 3+
 
-docker-compose up																# docker-compose is the YAML fileName
+docker-compose up								# docker-compose is the YAML fileName
 docker-compose up -d --build                                                    # dettached, build images before starting containers - build key in compose file
 docker-compose down                                                             # stop and remove services from the compose file
 docker stack deploy -c <composeFile> <stackName>                                # or --compose-file
