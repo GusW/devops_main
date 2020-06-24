@@ -113,7 +113,7 @@ docker service create --secret <secretName>
 #################### STACK ####################
 #- depends on SWARM and anyStackFile.yml version 3+
 
-docker-compose up								# docker-compose is the YAML fileName
+docker-compose -f <dockerComposeFile.yml> up									# docker-compose is the YAML fileName
 docker-compose up -d --build                                                    # dettached, build images before starting containers - build key in compose file
 docker-compose down                                                             # stop and remove services from the compose file
 docker stack deploy -c <composeFile> <stackName>                                # or --compose-file

@@ -1,0 +1,51 @@
+##### CIDR
+
+- 10.0.0.0/8 (Class A) 256^3 hosts
+= 10.0.0.0 network
+= 10.255.255.255 broadcast
+
+- 192.168/16 (Class B) 256^2 hosts
+= 192.168.0.0 network
+= 192.168.255.255 broadcast
+
+- 172.16/24 (Class C) - 256 hosts
+= 172.16.0.0 network
+= 172.16.0.255 broadcast
+
+- subnets
+- 192.168/27 (8.8.8.3) => 2^3 = 8 subnets
+- 32 - 27 = 5 => 2^5 = 32 hosts per subnet
+= [192.168.0.1 - 192.186.0.31]
+= [192.168.0.32 - 192.186.0.63]
+= [192.168.0.64 - 192.186.0.95]
+= [192.168.0.96 - 192.186.0.127]
+= [192.168.0.128 - 192.186.0.159]
+= [192.168.0.160 - 192.186.0.191]
+= [192.168.0.192 - 192.186.0.223]
+= [192.168.0.224 - 192.186.0.255]
+
+##### VCN
+
+- Private IPs; 10.0.0.0/8, 172.16/12, 192.168/16
+- OCI => range from /16 (256^2 hosts) to /30 (2^6 subnets with 2^2 hosts each)
+- OCI => reserves first 2 and last IPs (3 IPs!)
+
+- Regional services (spans all over the region with or without multiple ADs)
+- Subnet can be AD specific or regional
+- Subnet Private => only Private IPs
+- Subnet Public => contains both Private and Public IPs
+- VNIC => Virtual Network Interface Card connects resources (instances) to the VCN as endpoints
+
+##### IP Adresses
+
+- Every instance will get a mandatory Private IP inside a subnet (Primary VNIC)
+- A primary VNIC has a primary private IP and 31 private secondary IPs
+- Instances can have a secondary VNIC (connected to different subnets/VCNs)
+- Public IPs are optional
+- Possible to assign a given resource multiple public IPs across one or more VNICs
+- Public IP Ephemeral => temp, instance lifetime. Assigned only to primary private IP
+- Public IP Reserved => persitent, can be assigned/reassigned (31 times)
+
+
+
+

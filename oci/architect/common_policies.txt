@@ -1,0 +1,183 @@
+
+Allow group Auditors to inspect all-resources in tenancy
+Allow group Auditors to read instances in tenancy
+Allow group Auditors to read audit-events in tenancy
+
+##### VCN
+
+Allow group NetworkAdmins to manage virtual-network-family in tenancy
+Allow group NetworkAdmins to manage load-balancers in tenancy
+
+##### COMPUTE
+
+Allow group InstanceLaunchers to manage instance-family in compartment ABC
+Allow group InstanceLaunchers to read app-catalog-listing in tenancy
+Allow group InstanceLaunchers to use volume-family in compartment ABC
+Allow group InstanceLaunchers to use virtual-network-family in compartment XYZ
+
+Allow group DedicatedVMHostAdmins to manage dedicated-vm-hosts in tenancy
+Allow group DedicatedVMHostAdmins to manage instances in tenancy
+
+Allow group InstancePoolAdmins to read instance-family in tenancy
+Allow group InstancePoolAdmins to inspect volumes in tenancy
+Allow group InstancePoolAdmins to manage compute-management-family in tenancy
+
+Allow group InstancePoolUsers to use instance-pools in tenancy
+
+Allow group AutoscalingAdmins to manage auto-scaling-configurations in tenancy
+Allow group AutoscalingAdmins to manage instance-pools in tenancy
+
+Allow group CatalogSubscribers to inspect app-catalog-listing in tenancy
+Allow group CatalogSubscribers to read app-catalog-listing in tenancy
+Allow group CatalogSubscribers to manage app-catalog-listing in tenancy
+
+##### VOLUME STORAGE
+
+Allow group VolumeAdmins to manage volume-family in tenancy
+Allow group VolumeAdmins to use instance-family in tenancy
+Allow group VolumeAdmins to use volume-backups in tenancy where request.permission='VOLUME_BACKUP_COPY'
+Allow group VolumeAdmins to use boot-volume-backups in tenancy where request.permission='BOOT_VOLUME_BACKUP_COPY'
+
+Allow group VolumeBackupAdmins to inspect instances in tenancy
+Allow group VolumeBackupAdmins to inspect volume-attachments in tenancy
+Allow group VolumeBackupAdmins to use volumes in tenancy
+Allow group VolumeBackupAdmins to manage volume-backups in tenancy
+Allow group VolumeBackupAdmins to manage backup-policies in tenancy
+Allow group VolumeBackupAdmins to manage backup-policy-assignments in tenancy
+
+Allow group BootVolumeBackupAdmins to inspect instances in tenancy
+Allow group BootVolumeBackupAdmins to use volumes in tenancy
+Allow group BootVolumeBackupAdmins to manage boot-volume-backups in tenancy
+Allow group BootVolumeBackupAdmins to manage backup-policies in tenancy
+Allow group BootVolumeBackupAdmins to manage backup-policy-assignments in tenancy
+
+Allow group VolumeGroupCreators to inspect volumes in tenancy
+Allow group VolumeGroupCreators to manage volume-groups in tenancy
+
+Allow group VolumeGroupCloners to manage volumes in tenancy
+Allow group VolumeGroupCloners to manage volume-groups in tenancy
+
+Allow group VolumeGroupBackupAdmins to inspect volume-groups in tenancy
+Allow group VolumeGroupBackupAdmins to inspect volume-group-backups in tenancy
+Allow group VolumeGroupBackupAdmins to read volume-backups in tenancy
+Allow group VolumeGroupBackupAdmins to manage volumes in tenancy
+Allow group VolumeGroupBackupAdmins to manage volume-groups in tenancy
+Allow group VolumeGroupBackupAdmins to manage volume-backups in tenancy
+Allow group VolumeGroupBackupAdmins to manage volume-group-backups in tenancy
+
+##### FILE STORAGE
+
+Allow group StorageAdmins to manage file-family in tenancy
+Allow group StorageAdmins to manage file-family in compartment ABC
+
+Allow group Managers to read mount-targets in tenancy
+Allow group Managers to manage file-systems in tenancy
+
+##### OBJECT STORAGE
+
+Allow group ObjectAdmins to manage buckets in tenancy
+Allow group ObjectAdmins to manage objects in tenancy
+
+Allow group ObjectWriters to read buckets in compartment ABC
+Allow group ObjectWriters to manage objects in compartment ABC where any {request.permission='OBJECT_CREATE', request.permission='OBJECT_INSPECT'}
+
+Allow group ObjectReaders to read buckets in compartment ABC
+Allow group ObjectReaders to read objects in compartment ABC
+
+##### DATABASE
+
+Allow group DatabaseAdmins to manage database-family in tenancy
+
+Allow group ExaCCAdmins to manage database-family in tenancy
+
+Allow group DatabaseAdmins to manage autonomous-database-family in tenancy
+
+##### VAULTS
+
+Allow group SecurityAdmins to manage vaults in tenancy
+Allow group SecurityAdmins to manage keys in tenancy
+Allow group SecurityAdmins to manage secret-family in tenancy
+
+Allow group SecurityAdmins to manage secret-family in compartment ABC where target.vault.id='<vault_OCID>'
+
+Allow group SecurityAdmins to manage keys in compartment ABC where target.vault.id='<vault_OCID>'
+
+Allow group SecurityAdmins to use keys in compartment ABC where target.key.id='<key_OCID>'
+
+Allow group ObjectWriters, VolumeWriters, FileWriters, ClusterWriters, StreamWriters to use key-delegate in compartment ABC where target.key.id = '<key_OCID>'
+
+Allow service blockstorage, objectstorage-<region_name>, FssOc1Prod, oke, streaming to use keys in compartment ABC where target.key.id = '<key_OCID>'
+
+Allow group SecretsUsers to use secret-family in tenancy
+
+##### IAM
+
+Allow group HelpDesk to manage users in tenancy
+
+Allow group GroupAdmins to inspect users in tenancy
+Allow group GroupAdmins to inspect groups in tenancy
+Allow group GroupAdmins to use users in tenancy where target.group.name != 'Administrators'
+Allow group GroupAdmins to use groups in tenancy where target.group.name != 'Administrators'
+
+# No policy is required to let users manage their own credentials. 
+# All users have the ability to change and reset their own passwords, manage their own API keys, and manage their own auth tokens.
+
+Allow group A-Admins to manage all-resources in compartment Project-A
+
+Allow group PHX-Admins to manage all-resources in tenancy where request.region='phx'
+
+##### ADMINISTRATION
+
+Allow group AnnouncementListers to inspect announcements in tenancy
+
+Allow group AnnouncementReaders to read announcements in tenancy
+
+##### STREAMS
+
+Allow group StreamAdmins to manage streams in tenancy
+
+Allow group StreamUsers to use stream-push in tenancy
+Allow group StreamUsers to use stream-pull in tenancy
+
+Allow group StreamUsers to use stream-pull in tenancy where target.stream.id = '<stream_OCID>'
+
+##### MONITORING
+
+Allow group MetricReaders to inspect metrics in compartment ABC
+
+Allow group MetricReaders to read metrics in compartment ABC where target.metrics.namespace='oci_computeagent'
+
+Allow group MetricPublishers to use metrics in tenancy where target.metrics.namespace='mycustomnamespace'
+
+Allow dynamic-group MetricInstances to read metrics in tenancy
+
+Allow group AlarmUsers to read metrics in tenancy
+Allow group AlarmUsers to use ons-topics in tenancy
+Allow group AlarmUsers to manage alarms in tenancy
+
+##### GOVERNANCE
+
+define tenancy usage-report as ocid1.tenancy.oc1..aaaaaaaaned4fkpkisbwjlr56u7cj63lf3wffbilvqknstgtvzub7vhqkggq
+endorse group Administrators to read objects in tenancy usage-report
+
+Allow group <Example_Group> to read usage-reports in tenancy
+
+##### NOTIFICATION
+
+Allow group A-Admins to manage ons-topics in tenancy
+Allow group A-Admins to manage ons-subscriptions in tenancy
+
+#### EVENTS
+
+Allow group RuleReaders to read cloudevents-rules in tenancy
+
+Allow group <RuleAdmins> to inspect compartments in tenancy
+Allow group <RuleAdmins> to inspect streams in tenancy
+Allow group <RuleAdmins> to use stream-push in tenancy
+Allow group <RuleAdmins> to use stream-pull in tenancy
+Allow group <RuleAdmins> to use virtual-network-family in tenancy
+Allow group <RuleAdmins> to use tag-namespaces in tenancy
+Allow group <RuleAdmins> to use ons-topic in tenancy
+Allow group <RuleAdmins> to manage function-family in tenancy
+Allow group <RuleAdmins> to manage cloudevents-rules in tenancy
+
