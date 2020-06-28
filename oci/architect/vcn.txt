@@ -53,6 +53,9 @@
 ##### Route Table
 
 - Mapping rules of IP packets traveling out the VCN
+- All hosts within a VCN can route to one another => no local rule required 
+- Subnets can have one Route Table
+- Private Subnets are recommended to have individual route tables to control the flow of traffic outside of VCN
 - Each rule specifies:
 = Destination CIDR block
 = Route target (next hop)
@@ -151,6 +154,7 @@
 - Firewall rules applied to all instances launched to a VCN
 - Specifies types of traffic allowed in and out
 - Can get associated at subnet creation process time or later
+- Subnets can have multiple (default max is 5, but can get more upon requested)
 - Apply to given instances inside the same VCN or outside
 - Stateful
 = Connection Tracking: if a Ingress Stateful Rule is matched, an Egress rule is automatically applied
@@ -179,6 +183,36 @@
 = Specify ingress rule from CIDR 0.0.0.0/0 for TCP on port 80
 - Edit public Compute Instance Primary VNIC Network Security Group
 - Hit Public IP on browser
+
+##### VCN Defaults
+
+! VCN comes with default components:
+! Route Table
+! Security List
+! DCHP Options set
+! Can't delete
+! Can change the component contents
+! Can create more
+
+##### Internal DNS (VCN Private Domain Name System)
+
+- Enables Instances to use hostnames instead of private IPs to talk to one another
+- Internet and VCN Resolver => default choice for new VCNs
+- Custom Resolver: instances resolve hostnames in on-premises network through IPsec VPN/FastConnect
+- When creating VCNs/Subnets/Instances we can optionally specify a DNS label
+= VCN => <vcnDNSlabel>.oraclevcn.com
+= Subnet => <subnetDNSlabel>.<vcnDNSlabel>.oraclevcn.com
+= Instance Fully Qualified Domain Name (FQDN) => <hostname><subnetDNSlabel>.<vcnDNSlabel>.oraclevcn.com
+== FQDN => resolves to Private IP addresses. Cannot ssh <hostname><subnetDNSlabel>.<vcnDNSlabel>.oraclevcn.com
+
+##### Demo DNR Resolver
+
+- Create a new VCN in the training compartment specifying a DNS Label
+- Edit the created VCN's DHCP options
+= Change the DNS type from Internet & VCN Resolver to Custom Resolver
+= Type in 8.8.8.8 as DNS server and save
+
+
 
 
 
