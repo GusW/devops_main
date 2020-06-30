@@ -1,0 +1,124 @@
+##### Connectivity options
+
+- Public Internet
+= Internet Gateway && NAT Gateway
+= Reserved and Ephemeral IPs
+= Internet Data out Pricing (first 10TB free)
+
+- VPN Connect
+= IPSec authn and encryption
+= OCI mananged VPN Service (free, only pays for underlying resources)
+= Software VPN (Running on OCI Compute)
+
+- FastConnect
+= Private Connection
+= Separate from internet
+= Consistent network experience
+= Port speeds in 1 Gbps and 10 Gbps increments
+= Service Level Agreement
+
+##### VPN Basics
+
+- Uses public network
+- Make end to end connection between 2 private networks in a secure fashion
+- IPSec => standard protocol
+- Elements:
+= Tunnel => way to deliver packets through the internet to private RFC 1918 addresses
+= Authn
+= Encryption
+= Static Routing => send traffic for particular destinations in preconfigured routes
+= Dynamic Routing => uses routing procotol such as BGP to figure out the routes
+= CPE => lays in on-prems network, virtual representation of the device where the IPSec tunnel terminates
+
+- IPSec supports 2 types of encryption:
+= Tunnel mode =>
+= Transportation mode =>
+- OCI only supports Tunnel mode
+
+##### Dynamic Routing Gateway (DRG)
+
+- Virtual router that provides a path for private traffic between the VCN and no-internet destinations (e.g. on-prems)
+- Supports IPSec VPN and FastConnect
+- After attaching the DRG a VCN Route Table entry must be added to enable traffic
+- Standalone object => must be attached to a VCN; VCN 1:1 DRG
+
+##### VPN Connect
+
+- Managed VPN service securely connecting on-prem networks to OCI VNC through IPSec (industry standard encryption)
+- Bandwidth depends on customer access and internet congestion (typically less than 250 MB/s)
+- VPN Connect is offered for free
+- Normally customer ProofOfConcept starts with VPN Connect and morphs into FastConnect designs
+- OCI provisions redundant VPN tunnels located on physically and logically isolated tunnel endpoints
+
+##### VPN Connect Workflow
+
+- Create a VCN
+- Create a DRG
+- Attach DRG to VCN
+- Update VCN Route Table to route traffic to DRG
+- Create CPE object and all on-prems router Public IP Address
+- Access DRG to create IPSec Connection between CPE and DRG and provide a Static/Dynamic Routing
+- Configure on-prems CPE router
+
+##### VPN Connect Demo
+
+- CPE => docs.cloud.oracle.com/iaas/Content/Network/Reference/libreswanCPE.htm
+- Create a VCN vcn_vpn_connect 172.0/16
+- Create a Private Subnet subnet_vpn 172.0.1/24 using default Route Table and Security List
+- Open ports (add Security List rules):
+= TCP from 0.0.0.0/0 to 4500
+= TCP from 0.0.0.0/0 to 500
+= UDP from 0.0.0.0/0 to 4500
+= UDP from 0.0.0.0/0 to 500
+- Create a Dynamic Route Table drg_vpn and Attach to vcn_vpn_connect
+- Add vcn_vpn_connect Route Table entry to service drg_vpn to 10.0/16
+- Create Customer-Premises Equipment (CPE) cpe_vpn passing in a Public IP
+- Create IPSec Connection ipsec_vpn passing in [cpe_vpn, drg_vpn] and the static route 10.0/16
+- Check the IPSec tunnels created (2 tunnels):
+= Public IP Address
+= Shared Secret
+- access "on-prems" network
+- edit /etc/ipsec.conf typing in:
+= leftid => <IPSec tunnel Public IP>
+= left => <IPSec tunnel Public IP>
+- edit /etc/ipsec.secrets typing in:
+= <IPSec tunnel Public IP> <on-prem Public IP> : PSK <IPSec tunnel Shared Secret>
+- $ ipsec verify
+- $ sudo service ipsec restart
+
+##### FastConnect
+
+- Private, dedicated high bandwidth connection
+- Connects to OCI:
+= directly => company edge <-> Oracle edge
+= Via pre-integrated Network partners => 2-hop network, layer 2 or 3 connectivity
+
+! Private Peering => extend remote datacenters into OCI
+! Communication among Private IP adresses
+! Public Peering => connect to OCI public resources (e.g. Object Storage, OCI Console, APIs)
+! Don't use DRG
+
+- No charges for data transfer
+- Uses BGP protocol
+
+- Virtual Circuit => isolated network path over one or more physical network connections
+= Provides single, logical connection between customer, Oracle and provider
+= Made up of information shared in <Customer> <-> <Provider> <-> Oracle
+= Possible to have multiple virtual circuits: for different CIDRs or redudancy
+= Uses BGP
+= Layer 2 or 3 connectivity
+
+
+##### FastConnect Demo
+
+- Create FastConnect
+= Pick Oracle Provider (Megaport in this case..)
+= Private Virtual Circuit (for private peering => into a VCN)
+= Pick the drg_vpn create in another demo
+= Pick a bandwidth => depends on the provider, in this case 1 GB/s or 10 GB/s
+= Pass in the customer BGP IP address (e.g. 192.168.5.1/30)
+= Pass in the Oracle BGP IP address (e.g. 192.168.5.2/30)
+= Pass in the customer BGP ASN (e.g. 64556)
+
+- Need to log into the provider to pass in basically the very same info
+= Connection should be Up and running after config is properly created in the 3 ends

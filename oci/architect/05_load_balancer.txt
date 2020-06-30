@@ -1,0 +1,83 @@
+##### Primer
+
+- Load Balancer sits between clients and backends performing:
+= Service Discovery => Available backends, how should the balancer talk to the backends
+= Health Check => Healthy available backends
+= Algorithm => Way to balance individual requests throughout the healthy backends
+
+- Benefits:
+= Falt tolerance and High Availability => routing around bad or overloaded backends
+= Scale => maximizes throughput, minimizes response time, avoids overload
+= Naming Abstraction => name resolution can be delegated to the LB; backends dont need Public IP addr
+
+##### OCI Load Balacing Service
+
+- Load Balancer as-a-service => scale and HA
+- Public and Private options
+- Supported protocols:
+= TCP
+= HTTP/1
+= HTTP/1.1
+= HTTP/2
+= Websocket
+- Supports advanced features such as session persistence and content based routing
+- Key advantages:
+= Private or Public (with Public IP addr)
+= Provisioned bandwidth (100 MB/s, 400 MB/s, 8 GB/s) => no new to pre warm your LB
+= Single Load Balancer for TCP (layer 4) and HTTP (layer 7) traffic
+
+##### Public Load Balancer
+
+- Accepts traffic from the internet using a pulbic IP addr as an entry point
+- Regional Service
+- If Region len(AD) > 1:
+= Load Balancer requires a regional subnet (recommended)
+= 2 AD-specific subnets, each in a separate AD
+- Creates a primary and a standby LB, each in a different AD
+- Supports AD failover in the event of AD outage
+- Floating Public IP is attached to the primary Load Balancer
+= if there is an AD outage the Floating Public IP is set to the standby Load Balancer
+- Service treats both Load Balancer as equivalents and cannot nominate one 'primary'
+
+##### Concepts - Public Load Balancer
+
+- Listener => Checks incoming traffic on the LB
+
+- Backend Server => Application server
+
+- Load Balacing Policy:
+= TCP: LB considers policy and weight
+= HTTP sticky (cookie based session) fowards requests using cookie session info
+= HTTP non-sticky LB considers policy and weight
+- Load Balacing Policy algorithm:
+= round-robin => redirect sequentially
+= IP hash => always redirect to the same backend
+= least connection => redirect to the one with less connections
+
+- Backend Set => logical entity defined by:
+= list of backend servers
+= load balancing policy
+= health check policy
+
+- Health Checks => test to confirm the availability of backend servers, supports:
+= TCP-level
+= HTTP-level
+= Backends
+= Backend Set
+= Overall Load Balancer
+- Load Balancer IP can have up to 16 listeners (port numbers)
+- Each listener has a backend set and can have 1 to N backend servers
+- Health API provides 4-state health status (updated every 3 min):
+= ok
+= warning
+= critical
+= unknown
+
+##### Private Load Balancer
+
+- Assigned a Private IP addr from the subnet hosting the Load Balancer
+- Can be regional or AD-specific depending on scope of the host subnet:
+= HA within an AD with AD-specific subnets (2 Load Balancers in the same AD-specific subnet)
+= HA with regional subnets
+- The active and failover load balancer each require a Private IP addr from that subnets
+- The LB is accessible only from inside the VCN that contains the associated Subnet
