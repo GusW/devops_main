@@ -4,7 +4,7 @@
 = 0.0.0.0 network
 = 255.255.255.255 broadcast
 
-- 10.0.0.0/8 (Class A) 256^3 hosts
+- 10/8 (Class A) 256^3 hosts
 = 10.0.0.0 network
 = 10.255.255.255 broadcast
 
@@ -12,21 +12,21 @@
 = 192.168.0.0 network
 = 192.168.255.255 broadcast
 
-- 172.16/24 (Class C) - 256 hosts
+- 172.16.0/24 (Class C) - 256 hosts
 = 172.16.0.0 network
 = 172.16.0.255 broadcast
 
 - subnets
-- 192.168/27 (8.8.8.3) => 2^3 = 8 subnets
-- 32 - 27 = 5 => 2^5 = 32 hosts per subnet
-= [192.168.0.1 - 192.186.0.31]
-= [192.168.0.32 - 192.186.0.63]
-= [192.168.0.64 - 192.186.0.95]
-= [192.168.0.96 - 192.186.0.127]
-= [192.168.0.128 - 192.186.0.159]
-= [192.168.0.160 - 192.186.0.191]
-= [192.168.0.192 - 192.186.0.223]
-= [192.168.0.224 - 192.186.0.255]
+- 192.168.0/27 (8.8.8.3) => 2^3 = 8 subnets (11111111.11111111.11111111.11100000)
+- 8 - 3 = 5 => 2^5 = 32 hosts per subnet
+= 1) [192.168.0.1 - 192.186.0.31]
+= 2) [192.168.0.32 - 192.186.0.63]
+= 3) [192.168.0.64 - 192.186.0.95]
+= 4) [192.168.0.96 - 192.186.0.127]
+= 5) [192.168.0.128 - 192.186.0.159]
+= 6) [192.168.0.160 - 192.186.0.191]
+= 7) [192.168.0.192 - 192.186.0.223]
+= 8) [192.168.0.224 - 192.186.0.255]
 
 ##### VCN
 
@@ -53,7 +53,7 @@
 ##### Route Table
 
 - Mapping rules of IP packets traveling out the VCN
-- All hosts within a VCN can route to one another => no local rule required 
+- All hosts within a VCN can route to one another => no local rule required
 - Subnets can have one Route Table
 - Private Subnets are recommended to have individual route tables to control the flow of traffic outside of VCN
 - Each rule specifies:
@@ -63,7 +63,7 @@
 ##### Internet Gateway
 
 - In/out from Public Subnet
-- only 1 per VCN
+- Only 1 per VCN
 - After creation the VCN route table needs to get updated with 0.0.0.0/0 rule
 
 ##### NAT Gateway
@@ -91,8 +91,8 @@
 
 ##### Demo 1
 
-- Create VCN 10.0.0.0/16
-- Create Public Subnet 10.0.1.0/24
+- Create VCN 10.0.0.0/16 (10.0.0.0 - 10.0.255.255)
+- Create Public Subnet 10.0.1.0/24 (10.0.1.0 - 10.0.1.255)
 - Create Compute Instance on VCN/Subnet with Public IP addr
 - Create Internet Gateway
 - Edit VCN Route Table rules adding CIDR 0.0.0.0/0 to the created Internet Gateway
@@ -107,20 +107,20 @@
 
 ##### Demo 2
 
-- Create new Route Table to private Subnet
-- Create new Security List to private Subnet
+- Create new Private Route Table to private Subnet
+- Create new Private Security List to private Subnet
 - Create new Private Subnet referencing both Route Table and Security List created 10.0.2.0/24
 - Create new Compute Instance on Private Subnet
-- Add Ingress Rule to the VCN Security list accepting all protocols incoming from 10.0.1.0/24
-- Add Egress Rule to the VCN Security list allowing all protocols to 0.0.0.0/0
+- Add Ingress Rule to the Private Security list accepting all protocols incoming from 10.0.1.0/24
+- Add Egress Rule to the Private VCN Security list allowing all protocols to 0.0.0.0/0
 - ssh proxy command to created Instance
 = ssh -t -o ProxyCommand='ssh -i ~/.ssh/id_rsa opc@PublicIP -W %h:%p %r' -i ~/.ssh/id_rsa opc@PrivateIP
 - ping www.google.com
 - Create NAT Gateway
-- Edit VCN Route Table rules adding CIDR 0.0.0.0/0 to the created NAT Gateway
-- verify the private instance can now ping google
+- Edit Private Route Table rules adding CIDR 0.0.0.0/0 to the created NAT Gateway
+- Verify the private instance can now ping google
 
-  
+
 ##### Peering
 
 - Local connecting multiple VCNs within region - can communicate without using public Internet
@@ -132,7 +132,7 @@
 - Remote Peering connects VCNs in different regions through Oracle Backbone
 = Needs a Dynamic Route Gateway to each connected VCN
 = Route Table targets should be aiming the other VCN CIDR
-! VCNs connected via Local peering cannot have overlaping CIDRs
+! VCNs connected via Remote peering cannot have overlaping CIDRs
 ! Remote peering is not transitive: if 1 <-> 2 and 2 <-> 3, 1 is not <-> 3
 
 ##### Demo Local Peering Gateway
@@ -154,21 +154,21 @@
 - Firewall rules applied to all instances launched to a VCN
 - Specifies types of traffic allowed in and out
 - Can get associated at subnet creation process time or later
-- Subnets can have multiple (default max is 5, but can get more upon requested)
+- Subnets can have multiple SLs (default max is 5, but can get more upon requested)
 - Apply to given instances inside the same VCN or outside
-- Stateful
-= Connection Tracking: if a Ingress Stateful Rule is matched, an Egress rule is automatically applied
-= Default SL are stateful
-- Stateless
+- Stateful:
+= Connection Tracking => if a Ingress Stateful Rule is matched, an Egress rule is automatically applied
+= Default SLs are stateful
+- Stateless:
 = Automatic response is not allowed
 = Must create an stateless rule
-= Use cases: Load balancer, Big Data => large number of connections
+= Use cases => Load balancer, Big Data (large number of connections)
 
 ##### Network Security Group
 
 - Provides Virtual Firewall to a set o cloud resources with the same security details
 - Set of rules to specified VNICs within a VCN
-- Differs from Security Lists once these are applied at subnet level 
+- Differs from Security Lists once these are applied at subnet level
 = All the instances would have the same security posture
 = NSG specifies different postures to different instances within the same Subnet
 - You can specify a NSG as a source/target of another NSG
@@ -211,11 +211,3 @@
 - Edit the created VCN's DHCP options
 = Change the DNS type from Internet & VCN Resolver to Custom Resolver
 = Type in 8.8.8.8 as DNS server and save
-
-
-
-
-
-
-
-

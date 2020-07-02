@@ -6,7 +6,7 @@
 = Algorithm => Way to balance individual requests throughout the healthy backends
 
 - Benefits:
-= Falt tolerance and High Availability => routing around bad or overloaded backends
+= Fault tolerance and High Availability => routing around bad or overloaded backends
 = Scale => maximizes throughput, minimizes response time, avoids overload
 = Naming Abstraction => name resolution can be delegated to the LB; backends dont need Public IP addr
 
@@ -23,15 +23,15 @@
 - Supports advanced features such as session persistence and content based routing
 - Key advantages:
 = Private or Public (with Public IP addr)
-= Provisioned bandwidth (100 MB/s, 400 MB/s, 8 GB/s) => no new to pre warm your LB
+= Provisioned bandwidth (100 MB/s, 400 MB/s, 8 GB/s) => no need to pre warm your LB
 = Single Load Balancer for TCP (layer 4) and HTTP (layer 7) traffic
 
 ##### Public Load Balancer
 
-- Accepts traffic from the internet using a pulbic IP addr as an entry point
+- Accepts traffic from the internet using a public IP addr as an entry point
 - Regional Service
 - If Region len(AD) > 1:
-= Load Balancer requires a regional subnet (recommended)
+= Load Balancer requires a regional subnet (recommended) or
 = 2 AD-specific subnets, each in a separate AD
 - Creates a primary and a standby LB, each in a different AD
 - Supports AD failover in the event of AD outage

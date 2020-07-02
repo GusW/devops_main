@@ -14,7 +14,7 @@
 = Private Connection
 = Separate from internet
 = Consistent network experience
-= Port speeds in 1 Gbps and 10 Gbps increments
+= Port speeds in 1 Gbps to 10 Gbps increments
 = Service Level Agreement
 
 ##### VPN Basics
@@ -28,11 +28,11 @@
 = Encryption
 = Static Routing => send traffic for particular destinations in preconfigured routes
 = Dynamic Routing => uses routing procotol such as BGP to figure out the routes
-= CPE => lays in on-prems network, virtual representation of the device where the IPSec tunnel terminates
+= Customer-Premises Equipment (CPE) => virtual representation of the device where the IPSec tunnel terminates
 
 - IPSec supports 2 types of encryption:
-= Tunnel mode =>
-= Transportation mode =>
+= Tunnel mode => 2 IP headers are sent, the inner IP packet determines the IPsec policy that protects its contents
+= Transport mode => IP addresses in the outer header are used to determine the IPsec policy that will be applied to the packet
 - OCI only supports Tunnel mode
 
 ##### Dynamic Routing Gateway (DRG)
@@ -56,7 +56,7 @@
 - Create a DRG
 - Attach DRG to VCN
 - Update VCN Route Table to route traffic to DRG
-- Create CPE object and all on-prems router Public IP Address
+- Create CPE object and add on-prems router Public IP Address
 - Access DRG to create IPSec Connection between CPE and DRG and provide a Static/Dynamic Routing
 - Configure on-prems CPE router
 
@@ -88,7 +88,7 @@
 
 ##### FastConnect
 
-- Private, dedicated high bandwidth connection
+- Private, dedicated high bandwidth un-encryted connection
 - Connects to OCI:
 = directly => company edge <-> Oracle edge
 = Via pre-integrated Network partners => 2-hop network, layer 2 or 3 connectivity

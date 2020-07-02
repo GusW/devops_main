@@ -74,7 +74,3 @@ idmacyeswbbg/gustavo.watanabe@gmail.com
 # password...
 
 sudo docker pull iad.ocir.io/idmacyeswbbg/redpill-flask-user-api
-
-
-
-
