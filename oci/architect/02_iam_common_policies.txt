@@ -1,14 +1,61 @@
+##### Policies
 
-Allow group Auditors to inspect all-resources in tenancy
-Allow group Auditors to read instances in tenancy
-Allow group Auditors to read audit-events in tenancy
+- Allow
+= group
+= dynamic-group
+= service (blockstorage, objectstorage-<region_name>, FssOc1Prod, oke, streaming)
 
-##### VCN
+- to
+= inspect
+= read
+= use
+= manage
 
-Allow group NetworkAdmins to manage virtual-network-family in tenancy
-Allow group NetworkAdmins to manage load-balancers in tenancy
+- in
+= tenancy
+= compartment <singleCompartmentName> || <compartment:tree:to:target:if:not:adjacent>
+=> if tenancy -> Compartment 1 and policy created in tenancy == valid for Component 1
+=> else tenancy -> Compartment 1 -> Compartment 2 and policy created in tenancy targeting Compartment 2:
+== Compartment 1:Compartment 2
 
-##### COMPUTE
+- where
+=> request.permission = /*regex*/
+=> request.region = /*regex*/
+=> any {request.permission=/*regex*/, request.region=/*other*regex*/}
+=> target.<resource>.id = <OCID>
+=> target.<resource>.name != /*regex*/
+=> target.<resource>.namespace = <namespace>
+
+
+################################################### COMMON POLICIES ###################################################
+
+##### GOVERNANCE
+
+= usage-reports
+
+define tenancy usage-report as ocid1.tenancy.oc1..aaaaaaaaned4fkpkisbwjlr56u7cj63lf3wffbilvqknstgtvzub7vhqkggq
+endorse group Administrators to read objects in tenancy usage-report
+
+Allow group <Example_Group> to read usage-reports in tenancy
+
+##### AUDIT
+
+= audit-events
+
+- Allow group Auditors to inspect all-resources in tenancy
+- Allow group Auditors to read instances in tenancy
+- Allow group Auditors to read audit-events in tenancy
+
+##### VCN (networks)
+
+= virtual-network-family
+
+- Allow group NetworkAdmins to manage virtual-network-family in tenancy
+- Allow group NetworkAdmins to manage load-balancers in tenancy
+
+##### COMPUTE (instances)
+
+= instance-family
 
 Allow group InstanceLaunchers to manage instance-family in compartment ABC
 Allow group InstanceLaunchers to read app-catalog-listing in tenancy
@@ -27,11 +74,11 @@ Allow group InstancePoolUsers to use instance-pools in tenancy
 Allow group AutoscalingAdmins to manage auto-scaling-configurations in tenancy
 Allow group AutoscalingAdmins to manage instance-pools in tenancy
 
-Allow group CatalogSubscribers to inspect app-catalog-listing in tenancy
-Allow group CatalogSubscribers to read app-catalog-listing in tenancy
 Allow group CatalogSubscribers to manage app-catalog-listing in tenancy
 
-##### VOLUME STORAGE
+##### VOLUME STORAGE (boot & block volume)
+
+= volume-family
 
 Allow group VolumeAdmins to manage volume-family in tenancy
 Allow group VolumeAdmins to use instance-family in tenancy
@@ -65,7 +112,9 @@ Allow group VolumeGroupBackupAdmins to manage volume-groups in tenancy
 Allow group VolumeGroupBackupAdmins to manage volume-backups in tenancy
 Allow group VolumeGroupBackupAdmins to manage volume-group-backups in tenancy
 
-##### FILE STORAGE
+##### FILE STORAGE (file systems)
+
+= file-family
 
 Allow group StorageAdmins to manage file-family in tenancy
 Allow group StorageAdmins to manage file-family in compartment ABC
@@ -73,18 +122,23 @@ Allow group StorageAdmins to manage file-family in compartment ABC
 Allow group Managers to read mount-targets in tenancy
 Allow group Managers to manage file-systems in tenancy
 
-##### OBJECT STORAGE
+##### OBJECT STORAGE (objects)
+
+= buckets/objects
 
 Allow group ObjectAdmins to manage buckets in tenancy
 Allow group ObjectAdmins to manage objects in tenancy
 
 Allow group ObjectWriters to read buckets in compartment ABC
-Allow group ObjectWriters to manage objects in compartment ABC where any {request.permission='OBJECT_CREATE', request.permission='OBJECT_INSPECT'}
+Allow group ObjectWriters to manage objects in compartment ABC where any {request.permission='OBJECT_CREATE',
+                                                                          request.permission='OBJECT_INSPECT'}
 
 Allow group ObjectReaders to read buckets in compartment ABC
 Allow group ObjectReaders to read objects in compartment ABC
 
 ##### DATABASE
+
+= database-family
 
 Allow group DatabaseAdmins to manage database-family in tenancy
 
@@ -92,7 +146,9 @@ Allow group ExaCCAdmins to manage database-family in tenancy
 
 Allow group DatabaseAdmins to manage autonomous-database-family in tenancy
 
-##### VAULTS
+##### VAULTS (secrets)
+
+= vaults/keys/secret-family
 
 Allow group SecurityAdmins to manage vaults in tenancy
 Allow group SecurityAdmins to manage keys in tenancy
@@ -110,7 +166,9 @@ Allow service blockstorage, objectstorage-<region_name>, FssOc1Prod, oke, stream
 
 Allow group SecretsUsers to use secret-family in tenancy
 
-##### IAM
+##### IAM (identity and access management)
+
+= users/groups
 
 Allow group HelpDesk to manage users in tenancy
 
@@ -119,8 +177,8 @@ Allow group GroupAdmins to inspect groups in tenancy
 Allow group GroupAdmins to use users in tenancy where target.group.name != 'Administrators'
 Allow group GroupAdmins to use groups in tenancy where target.group.name != 'Administrators'
 
-# No policy is required to let users manage their own credentials. 
-# All users have the ability to change and reset their own passwords, manage their own API keys, and manage their own auth tokens.
+# No policy is required to let users manage their own credentials.
+# All users have the ability to change and reset their own passwords, manage their own API keys and auth tokens.
 
 Allow group A-Admins to manage all-resources in compartment Project-A
 
@@ -128,11 +186,15 @@ Allow group PHX-Admins to manage all-resources in tenancy where request.region='
 
 ##### ADMINISTRATION
 
+= announcements
+
 Allow group AnnouncementListers to inspect announcements in tenancy
 
 Allow group AnnouncementReaders to read announcements in tenancy
 
-##### STREAMS
+##### STREAMS (messaging service)
+
+= streams
 
 Allow group StreamAdmins to manage streams in tenancy
 
@@ -142,6 +204,8 @@ Allow group StreamUsers to use stream-pull in tenancy
 Allow group StreamUsers to use stream-pull in tenancy where target.stream.id = '<stream_OCID>'
 
 ##### MONITORING
+
+= metrics
 
 Allow group MetricReaders to inspect metrics in compartment ABC
 
@@ -155,19 +219,16 @@ Allow group AlarmUsers to read metrics in tenancy
 Allow group AlarmUsers to use ons-topics in tenancy
 Allow group AlarmUsers to manage alarms in tenancy
 
-##### GOVERNANCE
-
-define tenancy usage-report as ocid1.tenancy.oc1..aaaaaaaaned4fkpkisbwjlr56u7cj63lf3wffbilvqknstgtvzub7vhqkggq
-endorse group Administrators to read objects in tenancy usage-report
-
-Allow group <Example_Group> to read usage-reports in tenancy
-
 ##### NOTIFICATION
+
+= ons-topics/ons-subscriptions
 
 Allow group A-Admins to manage ons-topics in tenancy
 Allow group A-Admins to manage ons-subscriptions in tenancy
 
 #### EVENTS
+
+= cloudevents-rules
 
 Allow group RuleReaders to read cloudevents-rules in tenancy
 
@@ -180,4 +241,3 @@ Allow group <RuleAdmins> to use tag-namespaces in tenancy
 Allow group <RuleAdmins> to use ons-topic in tenancy
 Allow group <RuleAdmins> to manage function-family in tenancy
 Allow group <RuleAdmins> to manage cloudevents-rules in tenancy
-
