@@ -1,0 +1,110 @@
+##### Object Storage Intro
+
+- Object Storage Service
+= Internet-scale, high performance storage platform
+= Ideal for storing unlimited amount of unstructured data (images, media files, logs, backups)
+= Data is managed as objects using an API built on standard HTTP verbs
+= Regional service, not tied to any specific compute instance
+= Offers 2 distinct storage classes:
+=> Frequently accessed 'Hot Storage' (Object Storage)
+=> Less frequently accessed 'Cold Storage' (Archive Storage)
+= Supports private access from OCI resources in a VCN through a Service Gateway
+= Supports advanced features such as cross-region copy, pre-authn requests, lyfecycle rules, multipart upload
+
+- Object Storage Scenarios
+= Content repository => Highly available and durable content repository for data, media, logs
+= Archive/Backup => use of object storage for preserving data for longer periods
+= Log Data => application log data for analysis and debugging/troubleshooting
+= Big Data/Hadoop Support
+=> Use as primary data repository for Big Data enable ~50% improvement on performance
+=> HDFS connector provides conectivity to various Big Data Analytics Engines such as Apache Spark, MapReduce
+
+- Object Storage Service Features
+= Strong Consistency
+=> Always serves the most recent copy of the data when retrieved
+= Durability
+=> Data stored redudantly across multiple storage servers across multiple-ADs (or FDs)
+=> Data integrity is actively monitored and corrupt data detected and auto repaired
+= Performance
+=> Compute and Object Storage Services are co-located on the same fast network
+= Custom metadata
+=> Define custom extensive metadata as key-value pairs
+= Encryption
+=> Employs 256-bit Advanced Encryption Standard (AES-256) to encrypt object data
+=> Allow BYOK
+
+- Object Storage Resources
+= Object
+=> All data, regardless of content type, is managed as objects
+=> Each Object is composed by the object itself and metadata
+= Bucket
+=> A logical container for storing objects; each Object is stored in a bucket
+= Namespace
+=> A logical entity that serves as a top-level container for all buckets/objects
+=> Each tenancy has an unique global namespace
+=> Bucket names must be unique within a namespace but can repeat in different tenancies
+=> Within a namespace Buckets and Objects exist in a flat hierarchy
+=> Can simute however a directory structure using prefixes
+
+- Object Naming
+= Service prepends the Object Storage namespace, bucket strings to the object name:
+=> /n/<namespace>/b/<bucket>/o/<objectName>
+= Flat Hierarchy
+= For large number of objects, use prefixes and hierarchies:
+=> /n/fdsjahfdja/b/event_photos/o/marathon/finish_line.jpg
+=> /n/fdsjahfdja/b/event_photos/o/marathon/participants/p_21.jpg
+= Can use the CLI to perform bulk downloads and deletes
+
+- Object Storage Tiers
+= Standard Storage Tier - Hot
+=> Fast, immediate, frequent access
+=> OSS always serves the most recent copy of data when retrieved
+=> Data retrieval is instantaneous
+=> Standard buckets can't be downgraded to Archive buckets
+= Archive Storage Tier - Cold
+=> Seldom or rarely accessed data that must be retained and preserved for long periods of time
+=> Minimum retention requirement is 90 days
+=> Objects need to get restored before downloaded
+=> Time To First Byte (TTFB) after Archive Storage restore request: 4 hours
+=> Archive buckets can't be upgraded to Standard buckets
+
+##### Object Storage Demo
+
+##### Object Storage Capabilities
+
+- Managing Access and Authentications
+= Pre-Authenticated Requests
+=> Provides a way to let users access a bucket or an object without having their own credentials
+=> Can access via an unique URL <urlPrefix>/p/<authnReq>/n/...
+=> Can revoke the links any time
+= Public Buckets
+=> Buckets are considered private and access requires authn and authz
+=> Making Bucket public: supports anonymous, unauthenticated access
+=> Changing type of access doesn't affect pre-existing pre-authenticated reqs. Links still work
+
+- Cross-region Copy
+= Copy objects to other buckets in the same region and to buckets in other regions
+= Must authorize the service to manage objects on your behalf (separate policy for each region)
+=> allow service objectstorage-us-ashburn-1 to manage object-family in tenancy
+= Must specify an existing target bucket
+= Bulk copying not supported yet
+= Objects cannot be copied from Archive Storage
+
+- Object Lifecycle Management
+= Define lifecycle rules to automatically archive or delete objects after determined amount of days
+= Must authorize the service to manage objects on your behalf (separate policy for each region)
+=> allow service objectstorage-us-ashburn-1 to manage object-family in tenancy
+= Applied at the Bucket or Object name prefix level. If no prefix is specified => Bucket level
+= A rule that deletes an object takes priority over a rule that archives the same object
+
+- Managing Multipart Uploads
+= Individual parts of an object can be uploaded in parallel to reduce the amount of time
+= Create Object Parts
+=> For files 100+ MB, individual parts can go from 10 MB to 50 GB
+= Initiate an upload
+=> make a CreateMultipartUpload REST API call
+= Upload object parts
+=> Make an UploadPart request for each object part
+=> If there is network issues the upload can be restarted for a particular part
+= Commit the upload
+=> When all the Object parts are uploaded, commit it

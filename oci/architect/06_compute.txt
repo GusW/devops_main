@@ -107,7 +107,7 @@
 = Must extend first the root (linux) or system (Windows) partition
 = Default in Linux is 46.6GB
 = Default in Windows is 256GB
-= Can go to 32TB
+= Can go up to 32TB
 
 - Custom Images:
 = Pros => Can export across regions and tenancies
