@@ -1,0 +1,249 @@
+##### Oracle Database Service
+
+- Mission critical, enterprise grade cloud database service with comprehensive offerings
+= Exadata, Real Application Cluster (RAC), Bare Metal, VM
+- Complete Lifecycle Automation
+= Provisioning, Patching, Backup & Restore
+- High Availability and Scalability
+= RAC & Data Guard
+= Dynamic CPU and Storage Scaling
+- Security
+= Infrastructure (IAM, Security Lists, Audit Logs)
+= Database (TDE, Encrypted RMAN Backup / Block Volume Encryption)
+- OCI Platform integration
+= Tagging, Limits and Usage
+- BYOL
+
+- Virtual Macine (VM) Database (DB) Systems
+= 2 types of DB in VMs;
+=> 1-node VM DB (one VM)
+=> 2-node VM DB (two VMs clustered with RAC enabled)
+= VM DB systems can have only a single database home (only a single database)
+= Amount of memory allocation depends on the VM shape selected during provisioning
+= Size of storage is speficied when launching the VM DB system, can be scaled up anytime
+= Number ot CPU cores on an existing VM DB system cannot be changed
+= If launching a DB system to a VM shape you can pick an older database version
+= When a 2-node RAC VM DB system is provisioned the system assigns each node to a different FD by default
+= Data Guard within and across ADs is available for VM DB Systems (requires DB Enterprise Edition)
+
+- VM DB Systems Storage Architecture
+-------------------------------------
+++++++++++++++++ ASM ++++++++++++++++
+++++++ DATA +++++ | +++++ RECO ++++++
++++ ASM Disk Groups, +DATA, +RECO +++
++++++++++++ Block Storage +++++++++++
+-------------------------------------
+= ASM Relies on Block Storage (based on NVMe) for mirroring data
+= Block volumes are mounted using iSCSI
+= ASM uses external redudancy relying on the triple mirroring of the Block Storage
+= Different Block Storage volumes are used for DATA and RECO
+= Monitors the disks for hard and soft failures
+=> Ensure highest availability level and performance at all times
+= Storage Architecture required for VM RAC DB systems
+
+- VM DB Systems Storage Architecture - Fast Provisioning Option
+-------------------------------------
++ ext4 FS mounts, BITS, DATA, RECO ++
+++++++++++ Logical Volumes ++++++++++
+++++++++ Volume Groups on VM ++++++++
+++++++ Physical Volumes on VM +++++++
++++++++++++ Block Storage +++++++++++
+-------------------------------------
+= Linux Logical Volume Manager handles filesystems to be used by the database for storing DB files, logs, etc
+= Block Volumes are mounted using iSCSI
+= Available storage specified while provisioning determines the max total storage available through scaling
+= VM DB RAC Systems cannot be deployed using this options
+= Currently supports Oracle Database 18c and 19c releases
+
+- Bare Metal DB Systems
+-------------------------------------
+======= Bare Metal Server X7 ========
+++++++++++ Oracle Database ++++++++++
++++++ ASM for 12c+, ACFS for 11g ++++
+++++++++ DB Management Agent ++++++++
+++++++++++ Oracle Linux 6.8 +++++++++
+-------------------------------------
+++++++++++++ 52 CPU cores +++++++++++
++++++++++++++ 768 GB RAM ++++++++++++
++++++++++++ 51 TB NVMe raw ++++++++++
+-------------------------------------
+= Rely on Bare Metal servers running Oracle Linux
+= 1-node DB System:
+=> Single Bare Metal server
+=> Locally attached 51 TB NVMe storage (raw)
+=> Start with 2 cores and scale up/down OCPUs based on requirement
+=> Data Guard within and across ADs (requires DB Enterprise Edition)
+=> If single node fails, launch another system and restore the databases from current backups
+
+- VM DB Systems Storage Architecture
+-------------------------------------
+++++++++++++++++ ASM ++++++++++++++++
+++++++ DATA +++++ | +++++ RECO ++++++
++++ ASM Disk Groups, +DATA, +RECO +++
++++++++++++++++ NVMe ++++++++++++++++
+-------------------------------------
+= ASM manages mirroring of NVMe disks
+= Disks are partitioned - one for DATA and one for RECO
+= Monitors the disks for hard and soft failures
+= Proactively offlines disks in the categories below performing corrective actions (if possible)
+=> Failed
+=> Predicted to fail
+=> Performing poorly
+= On disk failure, DB System automatically creates an internal ticket and notifies internal team
+=> Ensure highest availability level and performance at all times
+
+- Exadata DB Systems
+= Full Oracle DB with all advanced options
+= Fastest and most available database cloud platform
+=> Scale-out Compute, Storage, Infiniband, PCIe Flash
+=> Complete Isolation of tenants with no overprovisioning
+= All Benefits of Public Cloud
+=> Fast, Elastic, Web Driven Provisioning
+= Oracle Experts Deploy and Manage Infrastructure
+=> Serves, Storage, Networking, Firmware, hypervisor, etc
+= Can specify zero cores when Exadata is launched
+=> This provisions and automatically stops the Exadata DB System
+= Billing:
+=> 1st month: full
+=> After that: by the hour
+=> Each OCPU is billed by the hour right after being added
+= Scaling from 1/4 to 1/2 rack or 1/2 to full rack requires backup and restore to the new scaled DB System
+
+- VM DB Systems Storage Architecture
+-------------------------------------
+++++++++++++++++ ASM ++++++++++++++++
+++++++ DATA +++++ | +++++ RECO ++++++
++++ ASM Disk Groups, +DATA, +RECO +++
++++++++++++ Local Storage +++++++++++
+-------------------------------------
+= Rely on Local Storage
+= When backups are provisioned in the Exadata Storage
+=> ~40% of the available storage space allocated to DATA disk group
+=> ~60% of the available storage space allocated to RECO disk group
+= When backups are not provisioned in the Exadata Storage
+=> ~80% of the available storage space allocated to DATA disk group
+=> ~20% of the available storage space allocated to RECO disk group
+= After storage configuration, the only way to reallocate without reconfig is via service request to Oracle
+
+- Scaling:
+= VM => Storage
+= BM => CPUs
+= Exadata => CPUs (from 1/4 to 1/2 to full rack)
+
+- Performance and Editions
+= VM => all performance tiers and editions but 19c
+= BM => all performance tiers and editions but 19c
+= Exadata => only extreme performance tier and all editions
+
+- Tiers
+= Standard Edition (SE)
+=>
+= Enterprise Edition (EE)
+=> SE +
+= High Performance Edition (HPE)
+=> EE +
+= Extreme Performance Edition (XE)
+=> HPE +
+
+##### Managing DB Systems
+
+- Console can be used to perform
+= Launch a DB System
+=> Create a DB System
+=> Status check: DB creation status and its runtime status afterwards
+= Start, Stop or Reboot DB Systems
+=> Billing continues in stop state only for BM DB Systems
+= Scale up Cores: BM DB Systems only
+= Scale up Storage: VM DB Systems only
+= Terminate => permanently deletes a DB System and the DBs running on it
+
+- Patching DB Systems
+= Automated Applicable Patch Discovery
+=> Automatic patching discovery and pre-flight checks/tests
+= On demand patching
+=> N-1 patching (previous patch available only if not applied)
+=> Pre-check and patching available at the click of a button
+= Availability during patching
+=> Exadata and RAC: patches are rolling
+=> Single Node Systems : if Active Data Guard is configured, can be leveraged by patch service
+= 2 step process
+=> One for the DB System another for the DB itself. DB System needs to be patched first
+= Identity and Access Controls
+=> Granular permission: possible to control who can list/use/manage patches
+
+- Backup/Restore
+= Managed backup and restore feature for VM/BM DB Systems. Exadata requires a backup config file
+= Backups are stored in Object or Local Storage (recommended Object Storage for High Durability)
+= DB Systems in private subnets can leverage Service Gateway
+= Backup options
+=> Automatic Incremental: runs once/day, repeats the cycle every week; retained for 30 days
+=> On-demand, standalone / full backups
+= Restore options
+=> Restore to the Latest: last known good state
+=> Restore to the Timestamp: specify a timestamp
+=> REstore to System Change Number (SCN): specified in the Backup
+
+- Automatic Backups
+= By default automatic backups are written to Oracle owned Object Storage (no customer access)
+= Default policy cannot be changed at this time
+= Automatic backups enabled for the first time after 2018-11-20 will run between 00:00 and 6AM DB system region local time
+=> Optionally can be specified a 2-hour window for the automatic backup process
+= Preset retention periods for automatic backups
+=> 7 days
+=> 15 days
+=> 30 days
+=> 45 days
+=> 60 days
+= Backup jobs are designed to be automatically retried upon failure
+= Oracle automatically gets notified if a backup job is stuck
+= All backups to cloud Object Storage are encrypted
+
+-  High Availability and Scalability
+= Robust Infrastructure
+=> Region with 3 ADs architecture
+=> Fully redundant and non-blocking Networking fabric
+=> 2-way or 3-way mirrored storage for Database
+=> Redundant Infiniband Fabric (Exadata) for cluster networking
+= Database Options to enable HA
+=> Database RAC Option in VMs and Exadata
+=> Automated Data Guard within and across ADs
+= Dynamic CPU (BM) and Storage (VM) Scaling
+
+- Oracle Data Guard
+= Robust Infrastructure
+= Supported on both VM and BM DB Systems
+= Limited to one Standby database per Primary Database on OCI
+=> Standby DB used for queries, reports, tests or backups: only for Active Data Guard
+= Switchover
+=> Planned role reversal, never get data loss
+=> No DB re-instantiation required
+=> Used for database upgrades, tech refresh, data center moves, etc
+=> Manually invoked via Enterprise Manager, DGMGRL or SQL Plus
+= Failover
+=> Unplanned failure of Primary
+=> Flashback DB used to reinstantiate original Primary
+=> Manually invoked via Enterprise Manager, DGMGRL or SQL Plus
+=> May also be done automatically: Fast-Start Failover
+
+- OCI Security Features Overview for DB Services
+= Instance security isolation
+=> BM DB Systems
+= Network security and Access Control
+=> VCN, Security Lists, VCN Public and Private subnets, Route Table, Service Gateway
+= Secure and Highly-available Connectivity
+=> VPN DRGs, VPN and FastConnect
+= User authn & authz
+=> IAM tenancy, Compartments and Security policies, console password, API signing key, SSH keys
+= Data encryption
+=> DBaaS TDE, RMAN encrypted backups, Local Storage and Object Storage encryption at rest
+= End-to-end TLS
+=> LBaaS with TLS1.2 with customer-provided certificates
+= Auditing
+=> OCI API audit logs
+
+- DB prices (check it online)
+
+##### Oracle Database Service Demo
+
+- Creating a VM Db System with 256 GB on a Extreme Performance Tier and scheduling backup policy to 7 days
+- Restoring a backup
