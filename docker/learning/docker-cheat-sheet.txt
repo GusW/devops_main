@@ -15,21 +15,22 @@ docker start <containerName or ID>
 docker exec <containerName or ID> <command> 					# running container
 docker stop <containerName or ID>
 docker rm <containerName or ID>
+docker system prune                                             # remove stopped imanges && containers
 
 #################### CONTAINER RUN ####################
 
-docker run --name <containerName> 
-                  <imageName:tag> 
+docker run --name <containerName>
+                  <imageName:tag>
                   <params>
-docker -d run --name <containerName> 
-                     <imageName:tag> <params> 
+docker -d run --name <containerName>
+                     <imageName:tag> <params>
                      <appendCommands>                                           # dettached
 docker attach <containerName or ID>                                             # reattach
 docker run -i <imageName:tag>                                                   # interactive mode
 docker run -it <imageName:tag>                                                  # interactive mode with terminal
-docker run -p <portHost:portContainer> 
+docker run -p <portHost:portContainer>
               <imageName:tag>                                                   # routing requests --publish
-docker run -e <envVariable:envValue> 
+docker run -e <envVariable:envValue>
               <containerName or ID>                                             # passing in env values
 
 docker run --link <linkImage:containerImage>
@@ -57,7 +58,7 @@ docker push <tagName> 						    	    	# yourDockerAccount/yourContainerName
 #################### VOLUME & PERSISTENT DATA ####################
 
 docker volume create <volumeName>                                               # creates a volume in /var/lib/docker/volumes/
-docker run -v <pathHost:pathContainer> 
+docker run -v <pathHost:pathContainer>
               <imageName:tag>                                                   # volume I/O mapping
 docker run --mount type=bind,
                    source=<path/outside/docker/volumes>,
@@ -66,8 +67,8 @@ docker run --mount type=bind,
 #################### NETWORKING ####################
 
 docker run --network=<none/host>                                                # default is bridge
-docker network create --driver <bridge/overlay> 
-                      --subnet 182.18.0.0/16 
+docker network create --driver <bridge/overlay>
+                      --subnet 182.18.0.0/16
                       <networkName>
 docker network create -o encrypted                                              # creates an overlay network spun over multiple host IPs encrypted
 docker network ls
@@ -83,7 +84,7 @@ docker service create --name <serviceName>
                       --network <networkName>
                       -e <envTweaks>
                       <imageName>
-docker service ls                                                               
+docker service ls
 docker service ps <-serviceName>                                                # list tasks of given service
 docker service scale <serviceName>=<number>                                     # scale up number of replicas
 
@@ -119,4 +120,3 @@ docker-compose down                                                             
 docker stack deploy -c <composeFile> <stackName>                                # or --compose-file
 docker stack ls
 docker stack services <stackName>
-

@@ -231,3 +231,12 @@
 = Provision Autonomous Exadata Infrastructure
 = Create Autonomous Container Database
 = Create Autonomous Database
+
+- Security
+= Databases always encrypted
+= Reduced attack surface
+= Automatic protection of customer data from Oracle operations staff
+= Database Vault's new Operations Control feature
+= Oracle automatically applies security updates for the entire stack
+=> Quaterly, or off-clycle for high-impact security vulnerability
+= Customer can seperately use DB Vault for their own user data isolation

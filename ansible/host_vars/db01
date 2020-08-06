@@ -1,0 +1,5 @@
+#host variables for the db01 system
+---
+ansible_host: 172.17.0.2
+ansible_port: 80
+become_ask_pass: True

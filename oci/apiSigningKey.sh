@@ -6,6 +6,19 @@
 
 ######################################################### API #########################################################
 
+#generate API keys
+#mkdir -p ~/.oci
+#Private Key
+#openssl genrsa -out ~/.oci/oci_api_key.pem 2048
+#chmod 0700 ~/.oci
+#chmod 0600 ~/.oci/oci_api_key.pem
+#Public Key
+#openssl rsa -pubout -in ~/.oci/oci_api_key.pem -out ~/.oci/oci_api_key_public.pem
+#Fingerprint
+#openssl rsa -in ~/.oci/oci_api_key.pem -pubout -outform DER 2>/dev/null | openssl md5 -c | awk '{print $2}' > ~/.oci/oci_api_key_fingerprint
+#chmod 0600 ~/.oci/oci_api_key_public.pem
+#chmod 0600 ~/.oci/oci_api_key_fingerprint
+
 targetOCIpath=~/.oci
 
 mkdir -p $targetOCIpath
