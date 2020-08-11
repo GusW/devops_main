@@ -4,7 +4,7 @@ data "oci_identity_availability_domains" "ashburn" {
 }
 
 data "oci_objectstorage_namespace" "user_namespace" {
-  compartment_id = var.compartment_ocid
+  compartment_id = module.tf_compartment.compartment_id
 }
 
 resource "random_id" "tf_id" {

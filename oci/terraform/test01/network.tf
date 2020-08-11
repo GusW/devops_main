@@ -2,7 +2,7 @@
 
 resource "oci_core_virtual_network" "vcn_tf" {
   cidr_block     = var.vcn_cidr_block
-  compartment_id = var.compartment_ocid
+  compartment_id = module.tf_compartment.compartment_id
   display_name   = "vcn_webserver"
   dns_label      = "vcn"
 
@@ -14,7 +14,7 @@ resource "oci_core_virtual_network" "vcn_tf" {
 #### Internet Gateway ###
 
 resource "oci_core_internet_gateway" "igw" {
-  compartment_id = var.compartment_ocid
+  compartment_id = module.tf_compartment.compartment_id
   display_name   = "igw"
   vcn_id         = oci_core_virtual_network.vcn_tf.id
 }
@@ -23,7 +23,7 @@ resource "oci_core_internet_gateway" "igw" {
 #### Route Table #####
 
 resource "oci_core_route_table" "rt1" {
-  compartment_id = var.compartment_ocid
+  compartment_id = module.tf_compartment.compartment_id
   vcn_id         = oci_core_virtual_network.vcn_tf.id
   display_name   = "rt1"
 
@@ -38,7 +38,7 @@ resource "oci_core_route_table" "rt1" {
 
 resource "oci_core_security_list" "sl_w" {
   display_name   = "sl-loadbalancer"
-  compartment_id = var.compartment_ocid
+  compartment_id = module.tf_compartment.compartment_id
   vcn_id         = oci_core_virtual_network.vcn_tf.id
 
   egress_security_rules {
@@ -113,7 +113,7 @@ resource "oci_core_subnet" "subnet1" {
   cidr_block          = var.subnet_cidr_w1
   display_name        = "subnet1-AD1"
   security_list_ids   = [oci_core_security_list.sl_w.id]
-  compartment_id      = var.compartment_ocid
+  compartment_id      = module.tf_compartment.compartment_id
   vcn_id              = oci_core_virtual_network.vcn_tf.id
   route_table_id      = oci_core_route_table.rt1.id
   dhcp_options_id     = oci_core_virtual_network.vcn_tf.default_dhcp_options_id
@@ -128,7 +128,7 @@ resource "oci_core_subnet" "subnet2" {
   cidr_block          = var.subnet_cidr_w2
   display_name        = "subnet2-AD2"
   security_list_ids   = [oci_core_security_list.sl_w.id]
-  compartment_id      = var.compartment_ocid
+  compartment_id      = module.tf_compartment.compartment_id
   vcn_id              = oci_core_virtual_network.vcn_tf.id
   route_table_id      = oci_core_route_table.rt1.id
   dhcp_options_id     = oci_core_virtual_network.vcn_tf.default_dhcp_options_id
