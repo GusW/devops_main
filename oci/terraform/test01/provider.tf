@@ -6,7 +6,3 @@ provider "oci" {
   region               = var.region
   disable_auto_retries = "true"
 }
-
-output "ADprint" {
-  value = lookup(data.oci_identity_availability_domains.ashburn.availability_domains[0],"name")
-}
