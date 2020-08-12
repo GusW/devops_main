@@ -22,3 +22,15 @@ module "tf_vcn" {
     compartment_id = module.tf_compartment.compartment_id
   }
 }
+
+module "tf_policy_object_storage" {
+  source      = "./modules/policy"
+
+  tf_policy = {
+    name               = "terraform-object-family-${random_id.tf_id.dec}"
+    description        = "policy created by terraform for training"
+    compartment_id     = module.tf_compartment.compartment_id
+  }
+  tf_policy_statements = ["Allow service objectstorage-${var.region} to manage object-family in compartment id ${module.tf_compartment.compartment_id}"]
+  tf_freeform_tags     = local.common_tags
+}

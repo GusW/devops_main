@@ -4,7 +4,7 @@ resource "oci_objectstorage_bucket" "bucket_tf" {
   name           = "bucket-${random_id.tf_id.dec}"
   namespace      = data.oci_objectstorage_namespace.user_namespace.namespace
   freeform_tags  = local.common_tags
-  depends_on     = [oci_identity_policy.tf_allow_object_storage_lifecycle, module.tf_compartment]
+  depends_on     = [module.tf_policy_object_storage, module.tf_compartment]
 }
 
 resource "oci_objectstorage_object" "hello-world-object-in-bucket" {
