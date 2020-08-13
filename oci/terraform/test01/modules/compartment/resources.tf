@@ -1,11 +1,10 @@
-resource "oci_identity_compartment" "tf_training_compartment" {
-    #Required
-    compartment_id = var.tf_training_compartment.root_compartment_id
-    description = var.tf_training_compartment.description
-    name = var.tf_training_compartment.name
+resource "oci_identity_compartment" "oci_compartment" {
+    compartment_id = var.oci_compartment.root_compartment_id
+    description = var.oci_compartment.description
+    name = var.oci_compartment.name
 
-    #Optional
-    #defined_tags = {"Operations.CostCenter"= "42"}
-    #freeform_tags = {"Department"= "Finance"}
+    provisioner "local-exec" {
+        command = var.oci_compartment.provisioner_command
+    }
 }
 
