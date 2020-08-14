@@ -59,3 +59,11 @@ variable "oci_vcn_subnet" {
     provisioner_command = "A-default-provisioner-command"
   }
 }
+
+variable "oci_security_list"{
+  description = "OCI Security List Params"
+  type = map(string)
+  default = {
+    display_name = "A-default-display-name"
+  }
+}

@@ -37,6 +37,8 @@ module "tf_vcn" {
     provisioner_command = "sleep 5"
   }
 
+//  oci_security_list
+
   oci_internet_gateway = {
     display_name = "tf_igw"
   }
