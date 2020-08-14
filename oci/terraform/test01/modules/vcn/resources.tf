@@ -103,15 +103,15 @@ resource "oci_core_security_list" "sl_w" {
 
 #### Subnet  #######
 resource "oci_core_subnet" "subnet_tf" {
-  count = var.subnet_count
+  count               = var.subnet_count
   availability_domain = lookup(data.oci_identity_availability_domains.targetRegion.availability_domains[0], "name")
-  cidr_block = cidrsubnet(oci_core_virtual_network.vcn_tf.cidr_block, var.oci_vcn_subnet.subnet_newbits, count.index)
-  display_name      = "${var.oci_vcn_subnet.display_name}${count.index + 1}"
-  security_list_ids = [oci_core_security_list.sl_w.id]
-  compartment_id    = oci_core_virtual_network.vcn_tf.compartment_id
-  vcn_id            = oci_core_virtual_network.vcn_tf.id
-  route_table_id    = oci_core_route_table.rt1_tf.id
-  dhcp_options_id   = oci_core_virtual_network.vcn_tf.default_dhcp_options_id
+  cidr_block          = cidrsubnet(oci_core_virtual_network.vcn_tf.cidr_block, var.oci_vcn_subnet.subnet_newbits, count.index)
+  display_name        = "${var.oci_vcn_subnet.display_name}${count.index + 1}"
+  security_list_ids   = [oci_core_security_list.sl_w.id]
+  compartment_id      = oci_core_virtual_network.vcn_tf.compartment_id
+  vcn_id              = oci_core_virtual_network.vcn_tf.id
+  route_table_id      = oci_core_route_table.rt1_tf.id
+  dhcp_options_id     = oci_core_virtual_network.vcn_tf.default_dhcp_options_id
 
   provisioner "local-exec" {
     command = var.oci_vcn_subnet.provisioner_command

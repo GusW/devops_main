@@ -1,3 +1,6 @@
+output "bucket_name" {
+  value = oci_objectstorage_bucket.bucket_tf.name
+}
 
 # report on the managed bucket resource by printing its OCID
 output "show-new-bucket" {

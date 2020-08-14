@@ -1,3 +1,4 @@
+
 # COMPARTMENT
 # TODO does it need to be declared here?
 variable "oci_compartment" {
@@ -60,9 +61,9 @@ variable "oci_vcn_subnet" {
   }
 }
 
-variable "oci_security_list"{
+variable "oci_security_list" {
   description = "OCI Security List Params"
-  type = map(string)
+  type        = map(string)
   default = {
     display_name = "A-default-display-name"
   }
