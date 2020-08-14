@@ -9,6 +9,12 @@ variable "region" {}
 
 variable "disable_auto_retries" {
   description = "Disable auto retries"
-  type = bool
-  default = true
+  type        = bool
+  default     = true
+}
+
+variable "all_cidr_blocks" {
+  description = "IPv4 CIDR range"
+  type        = string
+  default     = "0.0.0.0/0"
 }

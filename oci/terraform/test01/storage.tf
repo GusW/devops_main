@@ -8,11 +8,11 @@ resource "oci_objectstorage_bucket" "bucket_tf" {
 }
 
 resource "oci_objectstorage_object" "hello-world-object-in-bucket" {
-    #Required
-    bucket = oci_objectstorage_bucket.bucket_tf.name
-    content = "Hello Galaxy"
-    namespace = data.oci_objectstorage_namespace.user_namespace.namespace
-    object = "my-new-object"
-    content_type = "text/text"
+  #Required
+  bucket       = oci_objectstorage_bucket.bucket_tf.name
+  content      = "Hello Galaxy"
+  namespace    = data.oci_objectstorage_namespace.user_namespace.namespace
+  object       = "my-new-object"
+  content_type = "text/text"
 }
 
