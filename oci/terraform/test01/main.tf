@@ -16,7 +16,7 @@ module "tf_compartment" {
     root_compartment_id = var.compartment_ocid
     description         = "Terraform Training Compartment ${terraform.workspace}"
     name                = "tf_training_compartment_${terraform.workspace}"
-    provisioner_command = "sleep 20"
+    provisioner_command = var.command.sleep_20
   }
 }
 
@@ -28,33 +28,33 @@ module "tf_vcn" {
     compartment_id = module.tf_compartment.compartment_id
   }
 
-  oci_vcn_dns_label = "dnstf"
+  oci_vcn_dns_label = "${var.dns_label}tf"
 
   oci_vcn = {
-    cidr_block          = "10.10.0.0/16"
-    display_name        = "tf_vcn_webserver"
-    dns_label           = "vcntf"
-    provisioner_command = "sleep 5"
+    cidr_block          = var.cidr_blocks.class_a
+    display_name        = "tf_${var.vcn.display_name}_webserver"
+    dns_label           = "${var.vcn.dns_label}tf"
+    provisioner_command = var.command.sleep_5
   }
 
   oci_security_list = {
-    display_name = "tf_security_list"
+    display_name = "tf_${var.vcn.security_list_name}"
   }
 
   oci_internet_gateway = {
-    display_name = "tf_igw"
+    display_name = "tf_${var.vcn.internet_gateway_name}"
   }
 
   oci_route_table = {
-    display_name            = "tf_rt1"
-    route_rules_destination = var.all_cidr_blocks
+    display_name            = "tf_${var.vcn.route_table_name}_1"
+    route_rules_destination = var.cidr_blocks.all
   }
 
-  subnet_count = 2
+  subnet_count = var.subnet.count
   oci_vcn_subnet = {
-    subnet_newbits      = 4
-    display_name        = "tf_subnet1-AD"
-    provisioner_command = "sleep 5"
+    subnet_newbits      = var.subnet.new_bits
+    display_name        = "tf_${var.subnet_name_prefix}-AD"
+    provisioner_command = var.command.sleep_5
   }
 
   depends_on = [module.tf_compartment]

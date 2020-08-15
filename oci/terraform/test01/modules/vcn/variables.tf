@@ -11,6 +11,8 @@ variable "oci_compartment" {
 }
 
 # NETWORK
+
+
 variable "oci_vcn_dns_label" {
   description = "Domain Name Server Label for OCI Virtual Cloud Network"
   type        = string

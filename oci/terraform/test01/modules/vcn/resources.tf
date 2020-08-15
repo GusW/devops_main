@@ -36,6 +36,7 @@ resource "oci_core_security_list" "sl_w" {
   compartment_id = oci_core_virtual_network.vcn_tf.compartment_id
   vcn_id         = oci_core_virtual_network.vcn_tf.id
 
+  # TODO is there a better way to handle the creation of all these security rules?
   egress_security_rules {
     protocol    = "all"
     destination = "0.0.0.0/0"
