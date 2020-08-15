@@ -2,5 +2,4 @@ server.sh
 *.*~
 .terraform
 .idea
-fundamentals-of-terraform/
-Getting-Started-Terraform/
+.forks
