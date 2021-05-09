@@ -1,0 +1,26 @@
+
+
+aws --version
+
+sudo pip install --upgrade awscli
+
+aws configure
+
+aws ec2 describe-vpcs
+aws ec2 describe-regions
+aws ec2 describe-regions --query Regions[0]
+aws ec2 describe-regions --query Regions[*].{Name:RegionName}
+aws ec2 describe-regions --query 'Regions[*].{Name:RegionName, EP:Endpoints}' --output table
+aws ec2 describe-regions --query 'Regions[?RegionName==`us-west-2`].{Name:RegionName, EP:Endpoint}' --output table
+
+
+aws iam list-users
+
+aws s3 mb s3://<some-unique-bucket-name>
+aws s3 ls
+aws s3 cp . s3://<your-unique-bucket-name> --recursive
+aws s3 ls s3://<your-unique-bucket-name>/subdirectory/ --recursive
+aws s3 website s3://<your-unique-bucket-name> --index-document index.html --error-document error/index.html --acl public-read
+aws s3 sync . s3://<your-unique-bucket-name> --acl public-read
+aws s3 rm --recursive s3://<your-unique-bucket-name>
+aws s3 rb s3://<your-unique-bucket-name>
