@@ -547,19 +547,117 @@ Another thing we discussed was how to provision AWS resources through various op
 
 ## 2.4 Networking
 
+### 2.4.1 Connectivity to AWS
+
+### 2.4.2 Subnets and Network Access Control Lists
+
+### 2.4.3 Global Networking
+
+### 2.4.4 Summary
+
+### 2.4.5 Quiz
+
 ## 2.5 Storage and Databases
+
+### 2.5.1 Instance Stores and Amazon Elastic Blocks Store (Amazon EBS)
+
+### 2.5.2 Amazon Simple Storage Service (Amazon S3)
+
+### 2.5.3 Amazon Elastic File System (Amazon EFS)
+
+### 2.5.4 Amazon Relational Database Service (Amazon RDS)
+
+### 2.5.5 Amazon DynamoDB
+
+### 2.5.6 Amazon Redshift
+
+### 2.5.7 Amazon Database Migration Service
+
+### 2.5.8 Additional Database Services
+
+### 2.5.9 Summary
+
+### 2.5.10 Quiz
 
 ## 2.6 Security
 
+### 2.6.1 Shared Responsibility Model
+
+### 2.6.2 User Permission and Access
+
+### 2.6.3 AWS Organizations
+
+### 2.6.4 Compliance
+
+### 2.6.5 Denial-of-service attacks
+
+### 2.6.6 Additional Security Services
+
+### 2.6.7 Summary
+
+### 2.6.8 Quiz
+
 ## 2.7 Monitoring and Analytics
+
+### 2.7.1 Amazon CloudWatch
+
+### 2.7.2 AWS CloudTrail
+
+### 2.7.3 AWS Trusted Advisor
+
+### 2.7.4 Summary
+
+### 2.7.5 Quiz
 
 ## 2.8 Pricing and Support
 
+### 2.8.1 AWS Free Tier
+
+### 2.8.2 AWS Pricing Concepts
+
+### 2.8.3 Billing Dashboard
+
+### 2.8.4 Consolidated Billing
+
+### 2.8.5 AWS Budgets
+
+### 2.8.6 AWS Cost Explorer
+
+### 2.8.7 AWS Support Plans
+
+### 2.8.8 AWS Marketplace
+
+### 2.8.9 Summary
+
+### 2.8.10 Quiz
+
 ## 2.9 Migration and Innovation
+
+### 2.9.1 AWS Cloud Adoption Framework (AWS CAF)
+
+### 2.9.2 Migration Strategies
+
+### 2.9.3 AWS Snow Family
+
+### 2.9.4 Innovation with AWS
+
+### 2.9.5 Summary
+
+### 2.9.6 Quiz
 
 ## 2.10 The Cloud Journey
 
+### 2.10.1 The AWS Well-Architected Framework
+
+### 2.10.2 Benefits of the AWS Cloud
+
+### 2.10.3 Summary
+
+### 2.10.4 Quiz
+
 ## 2.11 AWS Certified Cloud Practitioner Basics
+
+## 2.12 Final Assessment
 
 ---
 
