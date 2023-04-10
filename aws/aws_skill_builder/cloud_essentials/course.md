@@ -673,53 +673,633 @@ This enables you to manage all of your domain names within a single location.
 
 ### 2.5.1 Instance Stores and Amazon Elastic Blocks Store (Amazon EBS)
 
+#### 2.5.1.1 [Instance Stores](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/InstanceStorage.html)
+
+Provides temporary block-level storage for an Amazon EC2 instance.
+An instance store is disk storage that is physically attached to the host computer for an EC2 instance, and therefore has the same lifespan as the instance.
+When the instance is terminated, you lose any data in the instance store.
+If you start an instance from a stopped state, the instance might start on another host, where the previously used instance store volume does not exist.
+Therefore, AWS recommends instance stores for use cases that involve temporary data that you do not need in the long term.
+
+#### 2.5.1.2 Amazon Elastic Block Store ([AmazonEBS](https://aws.amazon.com/ebs))
+
+Service that provides block-level storage volumes that you can use with Amazon EC2 instances.
+If you stop or terminate an Amazon EC2 instance, all the data on the attached EBS volume remains available.
+
+To create an EBS volume, you define the configuration (such as volume size and type) and provision it.
+After you create an EBS volume, it can attach to an Amazon EC2 instance.
+
+- Sizes up to 16 TiB
+- Solid State by default
+- HDD options
+
+#### 2.5.1.3 [Amazon EBS snapshots](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/EBSSnapshots.html)
+
+Because EBS volumes are for data that needs to persist, it’s important to back up the data.
+You can take incremental backups of EBS volumes by creating Amazon EBS snapshots.
+This means that the first backup taken of a volume copies all the data.
+For subsequent backups, only the blocks of data that have changed since the most recent snapshot are saved.
+
+Incremental backups are different from full backups, in which all the data in a storage volume copies each time a backup occurs.
+The full backup includes data that has not changed since the most recent backup.
+
+![EBS backups](./media/c2_5_1_3_EBS-backups.png)
+
 ### 2.5.2 Amazon Simple Storage Service (Amazon S3)
+
+#### 2.5.2.1 Object Storage
+
+Each object consists of:
+
+- Data
+- Metadata
+- Key
+
+Recall that when you modify a file in block storage, only the pieces that are changed are updated. When a file in object storage is modified, the entire object is updated.
+
+#### 2.5.2.2 Amazon Simple Storage Service ([Amazon S3](https://aws.amazon.com/s3/))
+
+Service that provides object-level storage.
+Amazon S3 stores data as objects in buckets.
+You can upload any type of file to Amazon S3, such as images, videos, text files, and so on.
+For example, you might use Amazon S3 to store backup files, media files for a website, or archived documents.
+Amazon S3 offers unlimited storage space.
+The maximum file size for an object in Amazon S3 is 5 TB.
+
+When you upload a file to Amazon S3, you can set permissions to control visibility and access to it.
+You can also use the Amazon S3 versioning feature to track changes to your objects over time.
+
+#### 2.5.2.3 [Amazon S3 Storage Classes](https://aws.amazon.com/s3/storage-classes)
+
+Factors:
+
+- How often you plan to retrieve your data
+- How available you need your data to be
+
+Classes:
+
+- **Amazon S3 Standard**
+
+  - Designed for frequently accessed data
+  - Stores data in a minimum of three Availability Zones
+  - Provides high availability for objects
+  - use cases:
+    - websites
+    - content distribution
+    - data analytics
+  - has a higher cost than other storage classes intended for infrequently accessed data and archival storage
+
+- **Amazon S3 Standard-Infrequent Access (S3 Standard-IA)**
+
+  - Ideal for infrequently accessed data
+  - Similar to Amazon S3 Standard but has a lower storage price and higher retrieval price
+  - ideal for data infrequently accessed but requires high availability when needed
+  - Stores data in a minimum of three Availability Zones
+
+- **Amazon S3 One Zone-Infrequent Access (S3 One Zone-IA)**
+
+  - Stores data in a single Availability Zone
+  - Has a lower storage price than Amazon S3 Standard-IA
+  - You want to save costs on storage.
+  - You can easily reproduce your data in the event of an Availability Zone failure.
+
+- **Amazon S3 Intelligent-Tiering**
+
+  - Ideal for data with unknown or changing access patterns
+  - Requires a small monthly monitoring and automation fee per object
+  - If you haven’t accessed an object for 30 consecutive days, Amazon S3 automatically moves it to the infrequent access tier, Amazon S3 Standard-IA
+  - If you access an object in the infrequent access tier, Amazon S3 automatically moves it to the frequent access tier, Amazon S3 Standard
+
+- **Amazon S3 Glacier Instant Retrieval**
+
+  - Works well for archived data that requires immediate access
+  - Can retrieve objects within a few milliseconds
+
+- **Amazon S3 Glacier Flexible Retrieval**
+
+  - Low-cost storage designed for data archiving
+  - Able to retrieve objects within a few minutes to hours
+
+- **Amazon S3 Glacier Deep Archive**
+
+  - Lowest-cost object storage class ideal for archiving
+  - Able to retrieve objects within 12 hours
+  - long-term retention and digital preservation for data that might be accessed once or twice in a year
+  - objects from this storage class are replicated and stored across at least three geographically dispersed Availability Zones
+
+- **Amazon S3 Outposts**
+
+  - Creates S3 buckets on Amazon S3 Outposts
+  - Makes it easier to retrieve, store, and access data on AWS Outposts
+  - delivers object storage to your on-premises AWS Outposts environment
+  - designed to store data durably and redundantly across multiple devices and servers on your Outposts
+  - workloads with local data residency requirements that must satisfy demanding performance needs by keeping data close to on-premises applications
+
+#### 2.5.2.4 Knowledge Check
+
+![Knowledge Check](./media/c2_5_2_4_knowledge-check.png)
 
 ### 2.5.3 Amazon Elastic File System (Amazon EFS)
 
+#### 2.5.3.1 File Storage
+
+Multiple clients (such as users, applications, servers, and so on) can access data that is stored in shared file folders.
+In this approach, a storage server uses block storage with a local file system to organize files.
+Clients access data through file paths.
+
+File storage is ideal for use cases in which a large number of services and resources need to access the same data at the same time.
+
+#### 2.5.3.2 Amazon Elastic File System ([Amazon EFS](https://aws.amazon.com/efs/))
+
+Scalable file system used with AWS Cloud services and on-premises resources.
+As you add and remove files, Amazon EFS grows and shrinks automatically.
+It can scale on demand to petabytes without disrupting applications.
+
+#### 2.5.3.3 Comparing Amazon EBS and Amazon EFS
+
+![EBS vs. EFS](./media/c2_5_3_3_EBS-vs-EFS.png)
+
 ### 2.5.4 Amazon Relational Database Service (Amazon RDS)
+
+#### 2.5.4.1 Relational Databases
+
+Data is stored in a way that relates it to other pieces of data.
+Relational databases use structured query language (SQL) to store and query data.
+This approach allows data to be stored in an easily understandable, consistent, and scalable way.
+
+#### 2.5.4.2 Amazon Relational Database Services ([Amazon RDS](https://aws.amazon.com/rds/))
+
+Service that enables you to run relational databases in the AWS Cloud.
+Amazon RDS is a managed service that automates tasks such as hardware provisioning, database setup, patching, and backups.
+With these capabilities, you can spend less time completing administrative tasks and more time using data to innovate your applications.
+You can integrate Amazon RDS with other services to fulfill your business and operational needs, such as using AWS Lambda to query your database from a serverless application.
+
+Amazon RDS provides a number of different security options.
+Many Amazon RDS database engines offer:
+
+- encryption at rest (protecting data while it is stored)
+- encryption in transit (protecting data while it is being sent and received).
+
+#### 2.5.4.3 Amazon RDS database engines
+
+- Amazon Aurora
+- PostgreSQL
+- MySQL
+- MariaDB
+- Oracle Database
+- Microsoft SQL Server
+
+#### 2.5.4.4 [Amazon Aurora](https://aws.amazon.com/rds/aurora/)
+
+Enterprise-class relational database.
+It is compatible with MySQL and PostgreSQL relational databases.
+It is up to five times faster than standard MySQL databases and up to three times faster than standard PostgreSQL databases.
+
+Amazon Aurora helps to reduce your database costs by reducing unnecessary input/output (I/O) operations, while ensuring that your database resources remain reliable and available.
+
+Consider Amazon Aurora if your workloads require high availability.
+It replicates six copies of your data across three Availability Zones and continuously backs up your data to Amazon S3.
 
 ### 2.5.5 Amazon DynamoDB
 
-### 2.5.6 Amazon Redshift
+#### 2.5.5.1 Nonrelational databases
 
-### 2.5.7 Amazon Database Migration Service
+A table is a place where you can store and query data.
+
+Nonrelational databases are sometimes referred to as “NoSQL databases” because they use structures other than rows and columns to organize data.
+One type of structural approach for nonrelational databases is key-value pairs.
+With key-value pairs, data is organized into items (keys), and items have attributes (values).
+You can think of attributes as being different features of your data.
+
+In a key-value database, you can add or remove attributes from items in the table at any time.
+Additionally, not every item in the table has to have the same attributes.
+
+#### 2.5.5.2 [Amazon DynamoDB](https://aws.amazon.com/dynamodb/)
+
+Key-value database service.
+It delivers single-digit millisecond performance at any scale.
+
+- Serverless
+- Automatic Scaling
+
+#### 2.5.5.3 Knowledge Check
+
+![Knowledge Check](./media/c2_5_5_3_knowledge-check.png)
+
+### 2.5.6 [Amazon Redshift](https://aws.amazon.com/redshift)
+
+Data warehousing service that you can use for big data analytics.
+It offers the ability to collect data from many sources and helps you to understand relationships and trends across your data.
+
+### 2.5.7 Amazon Database Migration Service ([AWS DMS](https://aws.amazon.com/dms/))
+
+Enables you to migrate relational databases, nonrelational databases, and other types of data stores.
+
+With AWS DMS, you move data between a source database and a target database.
+The source and target databases can be of:
+
+- Homogeneous: the same type
+- Heterogenous: different types (schema conversion tool must be used prior to migration)
+
+During the migration, your source database remains operational, reducing downtime for any applications that rely on the database.
+
+For example, suppose that you have a MySQL database that is stored on premises in an Amazon EC2 instance or in Amazon RDS.
+Consider the MySQL database to be your source database.
+Using AWS DMS, you could migrate your data to a target database, such as an Amazon Aurora database.
+
+Use cases:
+
+- Development and test database migrations
+  - Enabling developers to test applications against production data without affecting production users
+- Database consolidation
+  - Combining several databases into a single database
+- Continuous replication
+  - Sending ongoing copies of your data to other target sources instead of doing a one-time migration
 
 ### 2.5.8 Additional Database Services
 
-### 2.5.9 Summary
+### 2.5.8.1 [Amazon DocumentDB](https://aws.amazon.com/documentdb)
 
-### 2.5.10 Quiz
+Document database service that supports MongoDB workloads
+
+### 2.5.8.2 [Amazon Neptune](https://aws.amazon.com/neptune)
+
+Graph database service.
+
+You can use Amazon Neptune to build and run applications that work with highly connected datasets, such as:
+
+- recommendation engines
+- fraud detection
+- knowledge graphs
+
+### 2.5.8.1 Amazon Quantum Ledger Database ([Amazon QLDB](https://aws.amazon.com/qldb))
+
+Ledger database service.
+You can use Amazon QLDB to review a complete history of all the changes that have been made to your application data.
+
+### 2.5.8.1 [Amazon Managed Blockchain](https://aws.amazon.com/managed-blockchain)
+
+Service that you can use to create and manage blockchain networks with open-source frameworks.
+Blockchain is a distributed ledger system that lets multiple parties run transactions and share data without a central authority.
+
+### 2.5.8.1 [Amazon ElasticCache](https://aws.amazon.com/elasticache)
+
+Service that adds caching layers on top of your databases to help improve the read times of common requests.
+It supports two types of data stores:
+
+- Redis
+- Memcached
+
+### 2.5.8.1 Amazon DynamoDB Accelerator ([DAX](https://aws.amazon.com/dynamodb/dax/))
+
+In-memory cache for DynamoDB.
+It helps improve response times from single-digit milliseconds to microseconds.
+
+### 2.5.9 Quiz
+
+![Quiz 1](./media/c2_5_9_q1.png)
+![Quiz 2](./media/c2_5_9_q2.png)
+![Quiz 3](./media/c2_5_9_q3.png)
+![Quiz 4](./media/c2_5_9_q4.png)
+![Quiz 5](./media/c2_5_9_q5.png)
 
 ## 2.6 Security
 
-### 2.6.1 Shared Responsibility Model
+### 2.6.1 [Shared Responsibility Model](https://aws.amazon.com/compliance/shared-responsibility-model/)
+
+![Shared Responsibility Model](./media/c2_6_1_shared-responsibility-model.png)
+
+#### 2.6.1.1 Customer Responsibilities (“security in the cloud”)
+
+Customers are responsible for the security of everything that they create and put in the AWS Cloud.
+
+When using AWS services, you, the customer, maintain complete control over your content.
+You are responsible for managing security requirements for your content, including which content you choose to store on AWS, which AWS services you use, and who has access to that content.
+You also control how access rights are granted, managed, and revoked.
+
+The security steps that you take will depend on factors such as the services that you use, the complexity of your systems, and your company’s specific operational and security needs.
+Steps include selecting, configuring, and patching the operating systems that will run on Amazon EC2 instances, configuring security groups, and managing user accounts.
+
+#### 2.6.1.2 AWS Responsibilities (“security of the cloud”)
+
+AWS operates, manages, and controls the components at all layers of infrastructure.
+This includes areas such as the host operating system, the virtualization layer, and even the physical security of the data centers from which services operate.
+
+AWS is responsible for protecting the global infrastructure that runs all of the services offered in the AWS Cloud.
+This infrastructure includes AWS Regions, Availability Zones, and edge locations.
+
+AWS manages the security of the cloud, specifically the physical infrastructure that hosts your resources, which include:
+
+- Physical security of data centers
+- Hardware and software infrastructure
+- Network infrastructure
+- Virtualization infrastructure
+
+Although you cannot visit AWS data centers to see this protection firsthand, AWS provides several reports from third-party auditors. These auditors have verified its compliance with a variety of computer security standards and regulations.
+
+#### 2.6.1.3 Knowledge Check
+
+![Knowledge Check](./media/c2_6_1_3_knowledge-check.png)
 
 ### 2.6.2 User Permission and Access
 
-### 2.6.3 AWS Organizations
+#### 2.6.2.1 AWS Identity and Access Management ([IAM](https://aws.amazon.com/iam/))
+
+Manage access to AWS services and resources securely.
+IAM gives you the flexibility to configure access based on your company’s specific operational and security needs.
+
+#### 2.6.2.2 [AWS account root user](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_root-user.html)
+
+When you first create an AWS account, you begin with an identity known as the root user.
+
+The root user is accessed by signing in with the email address and password that you used to create your AWS account.
+You can think of the root user as being similar to the owner of the coffee shop.
+It has complete access to all the AWS services and resources in the account.
+
+![Root User](./media/c2_6_2_2_root-user.png)
+
+#### 2.6.2.3 IAM users
+
+An IAM user is an identity that you create in AWS.
+It represents the person or application that interacts with AWS services and resources.
+It consists of a name and credentials.
+
+By default, when you create a new IAM user in AWS, it has no permissions associated with it.
+To allow the IAM user to perform specific actions in AWS, such as launching an Amazon EC2 instance or creating an Amazon S3 bucket, you must grant the IAM user the necessary permissions.
+
+![IAM users](./media/c2_6_2_3_IAM-users.png)
+
+#### 2.6.2.4 IAM policies
+
+An IAM policy is a document that allows or denies permissions to AWS services and resources.
+
+IAM policies enable you to customize users’ levels of access to resources.
+For example, you can allow users to access all of the Amazon S3 buckets within your AWS account, or only a specific bucket.
+
+![IAM policies](./media/c2_6_2_4_IAM-policies.png)
+
+![IAM policies example](./media/c2_6_2_4_IAM-policies-example.png)
+
+#### 2.6.2.5 [IAM groups](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_groups.html)
+
+An IAM group is a collection of IAM users.
+When you assign an IAM policy to a group, all users in the group are granted permissions specified by the policy.
+
+Assigning IAM policies at the group level also makes it easier to adjust permissions when an employee transfers to a different job.
+For example, if a cashier becomes an inventory specialist, the coffee shop owner removes them from the “Cashiers” IAM group and adds them into the “Inventory Specialists” IAM group.
+This ensures that employees have only the permissions that are required for their current role.
+
+#### 2.6.2.6 [IAM roles](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles.html)
+
+An IAM role is an identity that you can assume to gain temporary access to permissions.
+
+When the employee needs to switch to a different task, they give up their access to one workstation and gain access to the next workstation.
+The employee can easily switch between workstations, but at any given point in time, they can have access to only a single workstation.
+This same concept exists in AWS with IAM roles.
+
+Before an IAM user, application, or service can assume an IAM role, they must be granted permissions to switch to the role.
+When someone assumes an IAM role, they abandon all previous permissions that they had under a previous role and assume the permissions of the new role.
+
+![IAM roles](./media/c2_6_2_6_IAM-roles.png)
+
+#### 2.6.2.7 [Multi-factor authentication](https://aws.amazon.com/iam/features/mfa/)
+
+In IAM, multi-factor authentication (MFA) provides an extra layer of security for your AWS account.
+
+### 2.6.3 [AWS Organizations](https://aws.amazon.com/organizations)
+
+Suppose that your company has multiple AWS accounts.
+You can use AWS Organizations to consolidate and manage multiple AWS accounts within a central location.
+
+When you create an organization, AWS Organizations automatically creates a root, which is the parent container for all the accounts in your organization.
+
+In AWS Organizations, you can centrally control permissions for the accounts in your organization by using **Service Control Policies** ([SCPs](https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_policies_scps.html)).
+SCPs enable you to place restrictions on the AWS services, resources, and individual API actions that users and roles in each account can access.
+
+#### 2.6.3.1 Organizational Units
+
+You can group accounts into organizational units (OUs) to make it easier to manage accounts with similar business or security requirements.
+When you apply a policy to an OU, all the accounts in the OU automatically inherit the permissions specified in the policy.
+
+By organizing separate accounts into OUs, you can more easily isolate workloads or applications that have specific security requirements.
+For instance, if your company has accounts that can access only the AWS services that meet certain regulatory requirements, you can put these accounts into one OU.
+Then, you can attach a policy to the OU that blocks access to all other AWS services that do not meet the regulatory requirements.
+
+![Organizational Units 1](./media/c2_6_3_1_OU-1.png)
+![Organizational Units 2](./media/c2_6_3_1_OU-2.png)
+![Organizational Units 3](./media/c2_6_3_1_OU-3.png)
+
+#### 2.6.3.2 Knowledge Check
+
+![Knowledge Check](./media/c2_6_3_2_knowledge-check.png)
 
 ### 2.6.4 Compliance
 
+#### 2.6.4.1 [AWS Artifact](https://aws.amazon.com/artifact)
+
+Service that provides on-demand access to AWS security and compliance reports and select online agreements.
+AWS Artifact consists of two main sections:
+
+- AWS Artifact Agreements
+  you can review, accept, and manage agreements for an individual account and for all your accounts in AWS Organizations.
+  Different types of agreements are offered to address the needs of customers who are subject to specific regulations, such as the Health Insurance Portability and Accountability Act (HIPAA).
+- AWS Artifact Reports
+  provide compliance reports from third-party auditors.
+  These auditors have tested and verified that AWS is compliant with a variety of global, regional, and industry-specific security standards and regulations.
+  AWS Artifact Reports remains up to date with the latest reports released.
+  You can provide the AWS audit artifacts to your auditors or regulators as evidence of AWS security controls.
+
+![AWS Artifact](./media/c2_6_4_1_AWS-Artifact.png)
+
+#### 2.6.4.2 [Customer Compliance Center](https://aws.amazon.com/compliance/customer-center/)
+
+Contains resources to help you learn more about AWS compliance.
+In the Customer Compliance Center, you can read customer compliance stories to discover how companies in regulated industries have solved various compliance, governance, and audit challenges.
+
+You can also access compliance whitepapers and documentation on topics such as:
+
+- AWS answers to key compliance questions
+- An overview of AWS risk and compliance
+- An auditing security checklist
+- Includes an auditor learning path
+  - designed for individuals in auditing, compliance, and legal roles who want to learn more about how their internal operations can demonstrate compliance using the AWS Cloud.
+
+#### 2.6.4.3 Knowledge Check
+
+![Knowledge Check](./media/c2_6_4_3_knowledge-check.png)
+
 ### 2.6.5 Denial-of-service attacks
+
+Deliberate attempt to make a website or application unavailable to users.
+
+For example, an attacker might flood a website or application with excessive network traffic until the targeted website or application becomes overloaded and is no longer able to respond.
+If the website or application becomes unavailable, this denies service to users who are trying to make legitimate requests.
+
+#### 2.6.5.1 Distributed denial-of-service attacks
+
+Multiple sources are used to start an attack that aims to make a website or application unavailable.
+This can come from a group of attackers, or even a single attacker.
+The single attacker can use multiple infected computers (also known as “bots”) to send excessive traffic to a website or application.
+
+#### 2.6.5.2 [AWS Shield](https://aws.amazon.com/shield)
+
+Service that protects applications against DDoS attacks.
+AWS Shield provides two levels of protection:
+
+- Standard
+  Automatically protects all AWS customers at no cost.
+  It protects your AWS resources from the most common, frequently occurring types of DDoS attacks.
+
+  As network traffic comes into your applications, AWS Shield Standard uses a variety of analysis techniques to detect malicious traffic in real time and automatically mitigates it.
+
+- Advanced
+  Paid service that provides detailed attack diagnostics and the ability to detect and mitigate sophisticated DDoS attacks.
+
+  It also integrates with other services such as Amazon CloudFront, Amazon Route 53, and Elastic Load Balancing.
+  Additionally, you can integrate AWS Shield with AWS WAF by writing custom rules to mitigate complex DDoS attacks.
 
 ### 2.6.6 Additional Security Services
 
-### 2.6.7 Summary
+#### 2.6.6.1 AWS Key Management Service ([AWS KMS](https://aws.amazon.com/kms))
+
+Enables you to perform encryption operations through the use of cryptographic keys.
+A cryptographic key is a random string of digits used for locking (encrypting) and unlocking (decrypting) data.
+You can use AWS KMS to create, manage, and use cryptographic keys.
+You can also control the use of keys across a wide range of services and in your applications.
+
+With AWS KMS, you can choose the specific levels of access control that you need for your keys.
+For example, you can specify which IAM users and roles are able to manage keys.
+Alternatively, you can temporarily disable keys so that they are no longer in use by anyone.
+Your keys never leave AWS KMS, and you are always in control of them.
+
+#### 2.6.6.2 [AWS WAF](https://aws.amazon.com/waf)
+
+Web application firewall that lets you monitor network requests that come into your web applications.
+
+AWS WAF works together with Amazon CloudFront and an Application Load Balancer.
+Recall the network access control lists that you learned about in an earlier module.
+AWS WAF works in a similar way to block or allow traffic.
+However, it does this by using a web access control list (ACL) to protect your AWS resources.
+
+#### 2.6.6.3 [Amazon Inspector](https://aws.amazon.com/inspector/)
+
+Helps to improve the security and compliance of applications by running automated security assessments.
+It checks applications for security vulnerabilities and deviations from security best practices, such as open access to Amazon EC2 instances and installations of vulnerable software versions.
+
+After Amazon Inspector has performed an assessment, it provides you with a list of security findings.
+The list prioritizes by severity level, including a detailed description of each security issue and a recommendation for how to fix it.
+However, AWS does not guarantee that following the provided recommendations resolves every potential security issue.
+Under the shared responsibility model, customers are responsible for the security of their applications, processes, and tools that run on AWS services.
+
+#### 2.6.6.4 [Amazon GuardDuty](https://aws.amazon.com/guardduty)
+
+Service that provides intelligent threat detection for your AWS infrastructure and resources.
+It identifies threats by continuously monitoring the network activity and account behavior within your AWS environment.
+
+GuardDuty begins monitoring your network and account activity.
+You do not have to deploy or manage any additional security software.
+GuardDuty then continuously analyzes data from multiple AWS sources, including VPC Flow Logs and DNS logs.
+
+If GuardDuty detects any threats, you can review detailed findings about image.pngthem from the AWS Management Console.
+Findings include recommended steps for remediation.
+You can also configure AWS Lambda functions to take remediation steps automatically in response to GuardDuty’s security findings.
+
+![Amazon DutyGuard](./media/c2_6_6_4_amazon-dutyguard.png)
 
 ### 2.6.8 Quiz
 
+![Quiz 1](./media/c2_6_8_q1.png)
+![Quiz 2](./media/c2_6_8_q2.png)
+![Quiz 3](./media/c2_6_8_q3.png)
+![Quiz 4](./media/c2_6_8_q4.png)
+![Quiz 5](./media/c2_6_8_q5.png)
+
 ## 2.7 Monitoring and Analytics
 
-### 2.7.1 Amazon CloudWatch
+### 2.7.1 [Amazon CloudWatch](https://aws.amazon.com/cloudwatch/)
+
+Web service that enables you to monitor and manage various [metrics](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/working_with_metrics.html) and configure alarm actions based on data from those metrics.
+
+CloudWatch uses metrics to represent the data points for your resources.
+AWS services send metrics to CloudWatch.
+CloudWatch then uses these metrics to create graphs automatically that show how performance has changed over time.
+
+#### 2.7.1.1 [CloudWatch Alarms](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/AlarmThatSendsEmail.html)
+
+You can create alarms that automatically perform actions if the value of your metric has gone above or below a predefined threshold.
+
+For example, suppose that your company’s developers use Amazon EC2 instances for application development or testing purposes.
+If the developers occasionally forget to stop the instances, the instances will continue to run and incur charges.
+
+In this scenario, you could create a CloudWatch alarm that automatically stops an Amazon EC2 instance when the CPU utilization percentage has remained below a certain threshold for a specified period.
+When configuring the alarm, you can specify to receive a notification whenever this alarm is triggered.
+
+#### 2.7.1.2 [CloudWatch Dashboard](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch_Dashboards.html)
+
+Enables you to access all the metrics for your resources from a single location.
+For example, you can use a CloudWatch dashboard to monitor the CPU utilization of an Amazon EC2 instance, the total number of requests made to an Amazon S3 bucket, and more.
+You can even customize separate dashboards for different business purposes, applications, or resources.
 
 ### 2.7.2 AWS CloudTrail
 
-### 2.7.3 AWS Trusted Advisor
+Records API calls for your account.
+The recorded information includes the identity of the API caller, the time of the API call, the source IP address of the API caller, and more.
+You can think of CloudTrail as a “trail” of breadcrumbs (or a log of actions) that someone has left behind them.
 
-### 2.7.4 Summary
+Recall that you can use API calls to provision, manage, and configure your AWS resources.
+With CloudTrail, you can view a complete history of user activity and API calls for your applications and resources.
 
-### 2.7.5 Quiz
+Events are typically updated in CloudTrail within 15 minutes after an API call.
+You can filter events by specifying the time and date that an API call occurred, the user who requested the action, the type of resource that was involved in the API call, and more.
+
+![AWS CouldTrail](./media/c2_7_2_AWS-CloudTrail.png)
+
+#### 2.7.2.1 [CloudTrail Insights](https://docs.aws.amazon.com/awscloudtrail/latest/userguide/logging-insights-events-with-cloudtrail.html)
+
+This optional feature allows CloudTrail to automatically detect unusual API activities in your AWS account.
+
+For example, CloudTrail Insights might detect that a higher number of Amazon EC2 instances than usual have recently launched in your account.
+You can then review the full event details to determine which actions you need to take next.
+
+#### 2.7.2.2 Knowledge Check
+
+![Knowledge Check](./media/c2_7_2_2_knowledge-check.png)
+
+### 2.7.3 [AWS Trusted Advisor](https://aws.amazon.com/premiumsupport/technology/trusted-advisor/)
+
+Web service that inspects your AWS environment and provides real-time recommendations in accordance with AWS best practices.
+
+Trusted Advisor compares its findings to AWS best practices in five categories:
+
+- cost optimization
+- performance
+- security
+- fault tolerance
+- service limits.
+
+For the checks in each category, Trusted Advisor offers a list of recommended actions and additional resources to learn more about AWS best practices.
+
+The guidance provided by AWS Trusted Advisor can benefit your company at all stages of deployment.
+For example, you can use AWS Trusted Advisor to assist you while you are creating new workflows and developing new applications.
+Or you can use it while you are making ongoing improvements to existing applications and resources.
+
+#### 2.7.3.1 AWS Trusted Advisor Dashboard
+
+![Trusted Advisor Dashboard](./media/c2_7_3_1_AWS-TrustedAdvisor.png)
+
+Review completed checks for cost optimization, performance, security, fault tolerance, and service limits.
+
+For each category:
+
+- The **green** check indicates the number of items for which it detected **no problems**.
+- The **orange** triangle represents the number of recommended **investigations**.
+- The **red** circle represents the number of recommended **actions**.
+
+### 2.7.4 Quiz
+
+![Quiz 1](./media/c2_7_4_q1.png)
+![Quiz 2](./media/c2_7_4_q2.png)
+![Quiz 3](./media/c2_7_4_q3.png)
 
 ## 2.8 Pricing and Support
 
