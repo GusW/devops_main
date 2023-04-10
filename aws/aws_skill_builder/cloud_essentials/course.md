@@ -549,13 +549,125 @@ Another thing we discussed was how to provision AWS resources through various op
 
 ### 2.4.1 Connectivity to AWS
 
+#### 2.4.1.1 Amazon Virtual Private Cloud ([Amazon VPC](https://aws.amazon.com/vpc/))
+
+Enables you to provision an isolated section of the AWS Cloud.
+In this isolated section, you can launch resources in a virtual network that you define.
+Within a virtual private cloud (VPC), you can organize your resources into subnets.
+A subnet is a section of a VPC that can contain resources such as Amazon EC2 instances.
+
+#### 2.4.1.2 Internet Gateway
+
+To allow public traffic from the internet to access your VPC, you attach an internet gateway to the VPC.
+![Internet Gateway](./media/c2_4_1_2_internet-gateway.png)
+
+#### 2.4.1.3 Virtual Private Gateway
+
+What if you have a VPC that includes only private resources?
+To access private resources in a VPC, you can use a virtual private gateway.
+You can think of the internet as the road between your home and the coffee shop.
+Suppose that you are traveling on this road with a bodyguard to protect you.
+You are still using the same road as other customers, but with an extra layer of protection.
+
+The bodyguard is like a virtual private network (VPN) connection that encrypts (or protects) your internet traffic from all the other requests around it.
+
+The virtual private gateway is the component that allows protected internet traffic to enter into the VPC.
+Even though your connection to the coffee shop has extra protection, traffic jams are possible because you’re using the same road as other customers.
+
+![Virtual Private Gateway](./media/c2_4_1_3_virtual-private-gateway.png)
+
+#### 2.4.1.4 [AWS Direct Connect](https://aws.amazon.com/directconnect/)
+
+Service that enables you to establish a dedicated private connection between your data center and a VPC.
+
+![AWS Direct Connect](./media/c2_4_1_4_aws-direct-connect.png)
+
 ### 2.4.2 Subnets and Network Access Control Lists
+
+#### 2.4.2.1 Subnets
+
+A subnet is a section of a VPC in which you can group resources based on security or operational needs.
+Subnets can be public or private.
+
+![Subnets](./media/c2_4_2_1_subnets.png)
+
+#### 2.4.2.2 Network Traffic in a VPC
+
+When a customer requests data from an application hosted in the AWS Cloud, this request is sent as a packet.
+A packet is a unit of data sent over the internet or a network.
+It enters into a VPC through an internet gateway.
+Before a packet can enter into a subnet or exit from a subnet, it checks for permissions.
+These permissions indicate who sent the packet and how the packet is trying to communicate with the resources in a subnet.
+
+#### 2.4.2.3 Network Access Control Lists ([ACL](https://docs.aws.amazon.com/vpc/latest/userguide/vpc-network-acls.html))
+
+Virtual firewall that controls inbound and outbound traffic at the subnet level.
+
+![Network ACL](./media/c2_4_2_3_NACL.png)
+
+#### 2.4.2.4 Stateless Packet Filtering
+
+**Network ACLs** perform **stateless** packet filtering.
+They remember nothing and check packets that cross the subnet border each way: inbound and outbound.
+When a packet response for that request comes back to the subnet, the network ACL does not remember your previous request.
+The network ACL checks the packet response against its list of rules to determine whether to allow or deny.
+
+#### 2.4.2.5 [Security Groups](https://docs.aws.amazon.com/vpc/latest/userguide/VPC_SecurityGroups.html)
+
+Virtual firewall that controls inbound and outbound traffic for an Amazon EC2 instance.
+
+![Security Groups](./media/c2_4_2_5_security-groups.png)
+
+#### 2.4.2.6 Stateful Packet Filtering
+
+**Security groups** perform **stateful** packet filtering.
+They remember previous decisions made for incoming packets.
+When a packet response for that request returns to the instance, the security group remembers your previous request.
+The security group allows the response to proceed, regardless of inbound security group rules.
+
+![NACL and Security Groups](./media/c2_4_2_6_NACL-security-groups.png)
+
+#### 2.4.2.7 Knowledge Check
+
+![Knowledge Check 1](./media/c2_4_2_7_knowledge-check-1.png)
+
+![Knowledge Check 2](./media/c2_4_2_7_knowledge-check-2.png)
 
 ### 2.4.3 Global Networking
 
-### 2.4.4 Summary
+#### 2.4.3.1 Domain Name System (DNS)
 
-### 2.4.5 Quiz
+You can think of DNS as being the phone book of the internet.
+DNS resolution is the process of translating a domain name to an IP address.
+
+![Domain Name System](./media/c2_4_3_1_dns.png)
+
+#### 2.4.3.2 [Amazon Route 53](https://aws.amazon.com/route53)
+
+DNS web service.
+It gives developers and businesses a reliable way to route end users to internet applications hosted in AWS.
+
+Amazon Route 53 connects user requests to infrastructure running in AWS (such as Amazon EC2 instances and load balancers).
+It can route users to infrastructure outside of AWS.
+
+Another feature of Route 53 is the ability to manage the DNS records for domain names.
+You can register new domain names directly in Route 53.
+You can also transfer DNS records for existing domain names managed by other domain registrars.
+This enables you to manage all of your domain names within a single location.
+
+![Route 53 and CloudFront](./media/c2_4_3_2_route53.png)
+
+#### 2.4.3.3 Knowledge Check
+
+![Knowledge Check](./media/c2_4_3_3_knowlegde-check.png)
+
+### 2.4.4 Quiz
+
+![Quiz 1](./media/c2_4_4_q1.png)
+![Quiz 2](./media/c2_4_4_q2.png)
+![Quiz 3](./media/c2_4_4_q3.png)
+![Quiz 4](./media/c2_4_4_q4.png)
+![Quiz 5](./media/c2_4_4_q5.png)
 
 ## 2.5 Storage and Databases
 
