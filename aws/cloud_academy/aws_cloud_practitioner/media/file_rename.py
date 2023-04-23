@@ -12,5 +12,5 @@ def _rename_dir_files(dir_name):
 
 
 if __name__ == "__main__":
-    dir_name = "12_knowledge_check_storage"
+    dir_name = "30_knowledge_check_billing_pricing_support"
     _rename_dir_files(dir_name)
