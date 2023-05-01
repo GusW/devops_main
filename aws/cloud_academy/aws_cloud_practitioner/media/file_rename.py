@@ -12,5 +12,5 @@ def _rename_dir_files(dir_name):
 
 
 if __name__ == "__main__":
-    dir_name = "32_cert_prep"
+    dir_name = "media"
     _rename_dir_files(dir_name)
